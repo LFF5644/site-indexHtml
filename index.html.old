@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html>
+<?
+const fs = require('fs');
+const os = require('os');
+
+let whoRunThis;
+let whoRunThis_raw;
+let dir;
+
+if(os.hostname()=="l3p3-rk5"){
+	whoRunThis="l3p3Server";
+}else{whoRunThis="otherServer"}
+whoRunThis_raw=os.hostname();
+
+dir=JSON.stringify(fs.readdirSync('public/p'));
+console.log(`load /index.html from "${input.ip}"${input.mobil?", Handy":""} `)
+?><head>
+	<?=globals.tmp_head(whoRunThis=="l3p3Server"?"Lando's Online Site":"Lando's OFFLINE Site",input)?>
+	<!--ONLY FOR BOTS-->
+	<link rel=canonical		href=https://lff.l3p3.de>
+	<meta name=authur		content=LFF5644>
+	<meta name=description	content="Lando Fernandez-Falk's Webseite!">
+	<meta name=keywords		content=HTML,JavaScript,Programmieren,LFF,LFF5644,Lando,Fernandez-Falk,Tostedt>
+	<meta property=og:type	content=webseite>
+	<meta property=og:url	content=https://lff.l3p3.de>
+	<meta name=robots		content=index>
+	<style>
+		body{
+			font-family: Arial;
+			text-shadow: 0px 3px 10px;
+		}
+		@media(max-width: 1100px){
+			body{
+				margin-top: 60px;
+			}
+		}
+		.small{
+			max-width: 30%;
+		}
+		.a_online{
+			color: green;
+		}
+		.a_online:hover{
+			color: orange;
+		}
+		.a_online:active{
+			color: red;
+			font-weight: bold;
+		}
+		.a_offline{
+			color: gray;
+		}
+		.a_offline:hover{
+			color: unset;
+		}
+		.a_offline:active{
+			color: red;
+			font-weight: bold;
+		}
+		.a_project{
+			color: blue;
+			font-size: 110%;
+		}
+		.a_project:hover{
+			color: green;
+		}
+		.a_project:active{
+			font-weight: bold;
+			color: red;
+		}
+		td{
+			padding-bottom: 10px;
+			padding-top:    5px;
+			padding-right:  5px;
+		}
+	</style>
+</head>
+<body id="body">
+<center>
+<h1>
+	Willkommen auf 
+	<label id="h1_label_lffs" class="green" ><?=globals.tmp_nameAsA()?>'s</label>
+	<label id="h1_label_cool" class="red">Coolen</label> 
+	Webseite!
+</h1>
+<h2>Server: <code><?=whoRunThis_raw?></code></h2>
+<h2>Meine HTML Projekte</h2>
+<h3 id="h3_newestProject">Mein 
+	<span class="green">neuestes</span> 
+	Project: 
+	<code id="code_newestProject" class="blue">...</code>
+</h3>
+<fieldset style="max-width: 300px;display: none;" id="fieldset_projectSettings">
+	<legend>Einstellungen (<a onclick="
+		GetId('span_showSettingsBTN').style.display='unset';
+		GetId('fieldset_projectSettings').style.display='none';
+		">Verstecken</a>)</legend>
+
+	<p><label><input type="checkbox" checked onclick="ProjectSettings('pointer')" id="checkbox_porjectSettings_pointer"/> Pointer</label></p>
+	<p><label><input type="checkbox"         onclick="ProjectSettings('links')"   id="checkbox_porjectSettings_links"  /> Altanativ Links</label></p>
+	<p><label><input type="checkbox" checked onclick="ProjectSettings('version')" id="checkbox_porjectSettings_version"/> Version</label></p>
+	<p><label><input type="checkbox"         onclick="ProjectSettings('info')"    id="checkbox_porjectSettings_info"   /> Version/Update Info</label></p>
+</fieldset>
+
+<div id="showProjects"></div>
+<p>Einstellungen: 
+	<span style="display: unset;" id="span_showSettingsBTN">
+		<a onclick="
+			GetId('span_showSettingsBTN').style.display='none';
+			GetId('fieldset_projectSettings').style.display='unset';
+		">Anzeigen</a>
+		, 
+	</span>
+	<a onclick="if(confirm('Wollen Sie die Project Anzeige Einstellungen WIRKLICH Löchen?\nJA oder NEIN ?!')){localStorage.removeItem('projectSettings');location.href='/'}">Zurücksetzen</a></p>
+<footer id="footer"></footer>
+
+<div style="right: 10px;" class="logReg" id="div_logRegPlace">
+	<button class="logRegBTN login" id="button_login" onclick="Login()">Login</button>
+	<button class="logRegBTN register" id="button_register" onclick="Register()">Register</button>
+
+</div>
+<div style="left: 10px;" class="logReg" id="div_logRegPlace_left">
+	<button class="logRegBTN logout" id="button_logout" onclick="Logout()">Logout</button>
+	<button class="logRegBTN accSettings" id="button_accSettings" onclick="AccSettings()">Settings</button>
+</div>
+
+</center>
+<script>
+
+const whoWebPage_usr="Start Seite";
+const whoWebPage_sys="StartSeite";
+let projectConfigs={"length":0};
+let dir=<?=dir?>;
+let blinck_objectsID=[];
+let elements=[];
+
+// einbinden L3P3 Status API
+// https://l3p3.de/svr/status/status.json
+// https://l3p3.de/svr/status/types.json
+
+function update(){
+	for(object of blinck_objectsID){
+		try{
+			GetId(object).style.opacity = Math.sin(Date.now() / 99) * .25 + .75;
+		}catch(e){}
+	}
+}
+function UseHashVars(){
+	let hashVar=GetHashVar();
+	if(hashVar===null){return null}
+	for(hash of hashVar){
+		if(hash[0]=="admin"&&hash[1]=="true"||hash[1]=="1"){
+			alert("NO YOU ARE NOT AN ADMIN!")
+		}if(hash[0]=="admin"&&hash[1]=="false"){
+			alert("you do the right thing!")
+		}if(ConvertText(hash[0],0)=="login"){
+			print("LOGIN...")
+			try{
+				let login=hash[1].split("|");
+				Login(login[0],login[1],login[2]);
+
+			}
+			catch(e){
+				print("Login Failed!")
+				alert("Falsches Formart!\nNutze: URL#login=USERNAME|PASSWORT/token|TYPE(token/PASSWORD)\n Exampel: lff.l3p3.de#login=Max Mustermann|max123|password\nExampel: lff.l3p3.de#login=Max Mustermann|0101010100011|token")
+			}
+		}if(ConvertText(hash[0],0)=="settings"){
+			if(hash[1]=="1"||hash[1]=="true"){AccSettings()}
+		}
+		
+	}
+}
+//das soll noch ins backend
+function ShowProjects(){
+	let order={"length":-1};
+	for(folder of dir){
+		let configFile=projectConfigs[folder];
+		let orderOfProject=String(GetLine(configFile,"order")[1]);
+		order[orderOfProject]=folder;
+		order.length+=1
+	}
+	let table=0;
+	{
+		table=CreateElement("table");
+		table.border="0";
+		AttrCSSSet(table,"text-align","left")
+		AppendChild(table,"showProjects",false);
+
+		let element_row=CreateElement("tr");
+		AppendChild(element_row,table);
+
+		let element=CreateElement("th");
+		element.innerText=" "
+		element.className="projectInfoType_project"
+		AppendChild(element,element_row);
+
+		element=CreateElement("th");
+		element.innerText=" "
+		element.className="projectInfoType_pointer"
+		AppendChild(element,element_row);
+
+		element=CreateElement("th");
+		element.innerText=" "
+		element.className="projectInfoType_links"
+		AppendChild(element,element_row);
+
+		element=CreateElement("th");
+		element.innerText=" "
+		element.className="projectInfoType_info"
+		AppendChild(element,element_row);
+
+		/*element=CreateElement("th");
+		element.innerText="Created:"
+		element.className="projectInfoType_created"
+		AppendChild(element,element_row);*/
+	}
+	let index=-1;
+	for(folder of dir){
+		let found=false;
+		for(t of Array(100)){
+			index+=1;
+			let res=order[String(index)];
+			if(res!=undefined){
+				found=true;
+				folder=res;
+				break
+			}else{
+				con.log("INDEX = "+index+" DO NOT HAS A PROJECT!")
+			}
+		}
+		if(found=false){
+			console.log("WARNING '"+folder+"' NOT FOUND (INDEX="+index+")")
+		}
+		let config=projectConfigs[folder];
+		con.log(folder)
+		let ud=undefined;
+		if(folder==ud||config==ud){break}
+		let name=GetLine(config,"name");
+		let online=GetLine(config,"online");
+		let versions=GetLine(config,"versions");
+		let show=GetLine(config,"show");
+		let info=GetLine(config,"info");
+		let newestProject=GetLine(config,"newestProject");
+		let inNameInfo_text=GetLine(config,"inNameInfo_text");
+		let inNameInfo_color=GetLine(config,"inNameInfo_color");
+		let version=GetLine(config,"version");
+		let date=GetLine(config,"date");
+		if(typeof(name)=="string"){name=folder}else{name=name[1]}
+		if(typeof(online)=="string"){online=false}else{online=online[1]}
+		if(typeof(versions)=="string"){versions=false}else{versions=versions[1]}
+		if(typeof(show)=="string"){show=true}else{show=show[1]}
+		if(typeof(info)=="string"){info=0}else{info=info[1]}
+		if(typeof(newestProject)=="string"){newestProject=0}else{newestProject=newestProject[1]}
+		if(typeof(inNameInfo_text)=="string"){inNameInfo_text=0}else{inNameInfo_text=inNameInfo_text[1]}
+		if(typeof(inNameInfo_color)=="string"){inNameInfo_color=0}else{inNameInfo_color=inNameInfo_color[1]}
+		if(typeof(version)=="string"){version="?"}else{version=version[1]}
+		if(typeof(date)=="string"){date=0}else{date=date[1]}
+		let element_row,element_0,element_1,element_2,element_3,element_4;
+		{
+			element_row=CreateElement("tr");
+			AppendChild(element_row,table);
+
+			element_0=CreateElement("td");
+			element_0.className="element_0 projectInfoType_project";
+			AppendChild(element_0,element_row);
+
+			element_1=CreateElement("td");
+			element_1.className="element_1 projectInfoType_pointer";
+			AppendChild(element_1,element_row);
+
+			element_2=CreateElement("td");
+			element_2.className="element_2 projectInfoType_links";
+			AppendChild(element_2,element_row);
+
+			element_3=CreateElement("td");
+			element_3.className="element_3 projectInfoType_version";
+			AppendChild(element_3,element_row);
+
+			element_4=CreateElement("td");
+			element_4.className="element_4 projectInfoType_info";
+			AppendChild(element_4,element_row);
+		}
+		let info_element="";
+		if(inNameInfo_text!=0){
+			info_element=`<span class="${inNameInfo_color}">${REPLACEALL(inNameInfo_text,[["${","</span><span class='"],["}>","'>"]])}</span>`
+		}
+		if(newestProject=="true"||newestProject=="1"){
+			let code=GetId("code_newestProject");
+			if(code.innerText=="..."){
+				code.innerHTML=name;
+				code.title=folder;
+			}
+			else if(GetId("code_newestProject").innerText!="..."){
+				code.innerHTML+="<code class='red'>, </code>"+name;
+				code.title+=", "+folder;
+			}
+		}
+		let elementA_versions="";
+		if(versions=="true"){
+			elementA_versions=`<a class="a_online" href="/${folder}.versions">Versionen</a>`
+		}else{
+			elementA_versions=`<a class="underLine a_offline" onclick="alert('für ${name} gibt es keine andere Versionen')">[Versionen]</a>`
+		}
+
+		let elementA_online="";
+		if(whoRunThis=="l3p3Server"){
+			elementA_online=""
+		}
+		else if(online=="true"){
+			elementA_online=`<a class="a_online" href="//lff.l3p3.de/${folder}">Online</a><span class="red">, </span>`
+		}else{
+			elementA_online=`<a class="underLine a_offline" onclick="alert('dieses Project ist nicht online verfügbar')">[Online]</a><span class="red">, </span>`
+		}
+		if(version!="?"){
+			let version_=NaN;
+			try{version_=Number(version)}catch(e){}
+			if(isNaN(version_)){
+				let color="red"
+				if(version.substr(version.length-1)=="b"){color="orange"}
+				else if(version.substr(0,1)=="0"){color="blue"}
+				else if(isNaN(Number(version.substr(0,1)))==false&&Number(version.substr(0,1))!=0){color="green"}
+				version=`<span class="${color}">${version}</span>`
+			}
+			else{
+				let color="red"
+				if(version.substr(0,1)=="0"){color="blue"}
+				else if(isNaN(Number(version.substr(0,1)))==false&&Number(version.substr(0,1))!=0){color="green"}
+				version=`<span class="${color}">${version}</span>`
+			}
+		}
+		element_0.innerHTML=`<span><a class="a_project" title="${info==0?"":REPLACEALL(info,[["[projectName]",name],["[projectName_raw]",folder],["[server]",location.host],["[IQ]","="]])}" href="/${folder}">${name}</a></span>`;
+		element_1.innerHTML=`<span class="green">--></span>`;
+		element_2.innerHTML=elementA_online+elementA_versions;
+		element_3.innerHTML=version;
+		element_4.innerHTML=info_element;
+	}
+	{//Load Projects Options
+		let settings=localStorage.getItem("projectSettings");
+		if(settings!=null){
+			settings=JSON.parse(settings);
+			for(item of Object.keys(settings.checkboxsState)){
+				try{
+					GetId("checkbox_porjectSettings_"+item).checked=settings.checkboxsState[item]
+					ProjectSettings(item);
+				}
+				catch(e){print("setting "+item+" can't found")}
+			}
+
+		}
+	}
+}
+function ProjectSettings(what){
+	const projectIds=GetIdClass("projectInfoType_"+what);
+	const checkbox=GetId("checkbox_porjectSettings_"+what)
+	if(checkbox.checked){
+		checkbox.disabled=true;
+		for(id of projectIds){
+			AttrCSSSet(id,"display","table-cell")
+		}
+
+		checkbox.disabled=false;
+	}else{
+		checkbox.disabled=true;
+		for(id of projectIds){
+			AttrCSSSet(id,"display","none")
+		}
+		checkbox.disabled=false;
+	}
+	let settings=localStorage.getItem("projectSettings");
+	if(settings==null){
+		settings={};
+		settings.checkboxsState={};
+	}else{
+		settings=JSON.parse(settings)
+	}
+	settings.checkboxsState[what]=checkbox.checked;
+	localStorage.setItem("projectSettings",JSON.stringify(settings))
+}
+
+{//Projecte Sotiren wenn projectSettings==null;
+	if(localStorage.getItem("projectSettings")==null){
+		ProjectSettings("pointer");
+		ProjectSettings("links");
+		ProjectSettings("version");
+		ProjectSettings("info");
+	}
+}
+
+{//Projecte instralisiren und downloaden!;
+	let dir_=[];
+	for(d of dir){
+		let t =d.includes("_");
+		let t_=d.includes(".");
+		if(!t&&!t_){dir_.push(d)}
+	}
+	dir=dir_;
+
+	let index=-1;
+	for(project of dir){
+		index+=1
+		GetFile("/p/"+project+"/config.ini",(result,args)=>{
+			projectConfigs[args[1]]=result;
+			projectConfigs.length+=1
+			if(projectConfigs.length==dir.length){
+				print("Download Finished, Load Projects!");
+				ShowProjects();
+
+			}
+		},[index,project])
+	}
+}
+
+{// das ist das alte system;
+	/*
+	for(project of dir){
+		let project_div = document.createElement("p");
+		elements.push([project,project_div]);
+		GetId("showProjects").appendChild(project_div);
+
+		var element = document.createElement("a");
+		element.href="/"+project;
+		element.className="a_project";
+		element.innerText=project+" ";
+		project_div.appendChild(element);
+
+		element=null;element=document.createElement("slim");
+		element.innerText="-->";
+		element.style.color="green";
+		project_div.appendChild(element);
+		element=null;
+
+		if(whoRunThis=="otherServer"){
+			let element=document.createElement("a");
+			element.href="//lff.l3p3.de/"+project;
+			element.innerText="Online";
+			element.target="black_";
+			element.className="a_online";
+			project_div.appendChild(element);
+
+			element=document.createElement("slim");
+			element.innerText=", ";
+			project_div.appendChild(element);
+			element=null;
+		}
+		element=document.createElement("a");
+		element.href="/"+project+".versions";
+		element.innerText="Andere Versionen";
+		element.target="black_";
+		element.className="a_offline";
+		project_div.appendChild(element);
+	} //this is the old Project's lister!
+	*/
+}
+
+{//AutoLogin;
+	let loginData=localStorage.getItem("loginData");
+	if(loginData!=null){
+		if(loginData=="LOGOUT!"){
+			localStorage.removeItem("loginData")
+			alert("Logout Successfully!")
+		}else{
+			let t=loginData.split("|");
+			Login(t[0],t[1],"token")
+		}
+	}else if(loginData==null){}
+}
+
+//functions to execute
+UseHashVars();
+
+</script>
+</body>
+</html>
