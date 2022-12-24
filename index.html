@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<!--IndexHtml update at 23.12.2022 at 23:32 o'Clock-->
+<html>
+<head>
+	<title>Landos Webseite</title>
+	<link rel="stylesheet" href="/css/main.css">
+	<link rel="stylesheet" href="/css/main.dark.css">
+	<style>
+		body{
+			max-width: 600px;
+			margin: 0 auto;
+			padding: 0 20px;
+		}
+		h1,h2,h3,h4,h5,h6{
+			margin-left: 50px;
+		}
+	</style>
+</head>
+<body>
+<h1>
+	Landos Webseite 
+	<span class="green" title="Copierigt (ja ich habs SAVE falsch geshreiben!)">©</span>
+	<span class="red" title="Hier wird immer das jzige jahr drin stehen!">
+		<?=new Date().getFullYear()?>
+	</span>
+</h1>
+<p>
+	<span class=green title="<?=new Date()?>">Bot</span>: 
+	<?
+		let msg="Hallo!"
+		const date=new Date();
+		const hour=date.getHours();
+		const {randomIndex,jsonStringify}=globals.functions;
+		const hours=[
+			{
+				from: 0,
+				to: 4,
+				allowed:[23],
+				msgs:[
+					"Noch wach?",
+					"Schlecht Geschlafen?",
+					"jz aber schnell den PC aus machen!",
+					"noch am <span title=\"YouTube\">YT</span> Glotzen?",
+					"wenn dich deine eltern um die zeit erwischen dann KOPF AB!",
+				],
+			},
+			{
+				from: 5,
+				to: 7,
+				msgs:[
+					"Gut Geschlafen?",
+					"Hast du Schule Frühschicht etc?",
+					"Du bist aber früh wach!",
+				],
+			},
+			{
+				from: 8,
+				to: 10,
+				msgs:[
+					"Guten Morgen!",
+					"Schon Gefrüstückt",
+					"Malzeit!",
+				],
+			},
+			{
+				from: 11,
+				to: 11,
+				msgs:[
+					"Was Steht heute noch an?",
+					"schon was geschaft?",
+					"Schon wieder Hunger?",
+					"Malzeit!"
+				],
+			},
+			{
+				from: 12,
+				to: 14,
+				msgs:[
+					"Schon Mittag gegessen?",
+					"was gibts zu essen?",
+					"Hunger?",
+				],
+			},
+			{
+				from: 15,
+				to: 16,
+				msgs:[
+					"Kleine Kaffe-Pause?",
+					"gibts kaffe und kuchen?",
+				],
+			},
+			{
+				from: 17,
+				to: 18,
+				msgs:[
+					"schon feierabend?",
+					"was hast du heute so gemacht?",
+				],
+			},
+			{
+				from: 19,
+				to: 21,
+				msgs:[
+					"ZOCKEN?",
+					"ich zocke was feines!",
+					"um die Zeit Programmiere ich meistens!",
+					"Schon im Bett?",
+				],
+			},
+			{
+				from: 22,
+				to: 22,
+				msgs:[
+					"jz soltest du aber langsam Schlafen!",
+					"hast du morgen keine Schule?",
+					"ich gehe jz langsam in Bett!",
+				],
+			},
+		];
+
+		const msgObject=hours.find(item=>
+			(
+				item.from<=hour&&
+				item.to>=hour
+			)||
+			(
+				item.allowed?
+					item.allowed:
+					[]
+			)
+				.includes(hour)
+		);
+		if(msgObject){
+			const index=randomIndex(msgObject.msgs.length-1);
+			msg=msgObject.msgs[index];
+		}
+	?>
+	<?=msg?>
+</p>
+</body>
+</html>
