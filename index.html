@@ -1,5 +1,12 @@
-<!DOCTYPE html>
-<!--IndexHtml update at 23.12.2022 at 23:32 o'Clock-->
+<?
+const service_storage=service_require("server/serverStorage/serverStorage");
+const service_projects=service_require("server/projects/projects");
+const {
+	randomIndex,
+	jsonStringify
+}=globals.functions;
+?><!DOCTYPE html>
+<!--IndexHtml update at 23.12.2022 at 23:32-->
 <html>
 <head>
 	<title>Landos Webseite</title>
@@ -25,98 +32,11 @@
 	</span>
 </h1>
 <p>
-	<span class=green title="<?=new Date()?>">Bot</span>: 
-	<?
-		let msg="Hallo!"
+	<span class=green title="<?=new Date()?>">Bot</span>: <?
+		let msg="<span title=\"zu der zeit fält mir nichts ein!\">Hallo!</span>"
 		const date=new Date();
 		const hour=date.getHours();
-		const {randomIndex,jsonStringify}=globals.functions;
-		const hours=[
-			{
-				from: 0,
-				to: 4,
-				allowed:[23],
-				msgs:[
-					"Noch wach?",
-					"Schlecht Geschlafen?",
-					"jz aber schnell den PC aus machen!",
-					"noch am <span title=\"YouTube\">YT</span> Glotzen?",
-					"wenn dich deine eltern um die zeit erwischen dann KOPF AB!",
-				],
-			},
-			{
-				from: 5,
-				to: 7,
-				msgs:[
-					"Gut Geschlafen?",
-					"Hast du Schule Frühschicht etc?",
-					"Du bist aber früh wach!",
-				],
-			},
-			{
-				from: 8,
-				to: 10,
-				msgs:[
-					"Guten Morgen!",
-					"Schon Gefrüstückt",
-					"Malzeit!",
-				],
-			},
-			{
-				from: 11,
-				to: 11,
-				msgs:[
-					"Was Steht heute noch an?",
-					"schon was geschaft?",
-					"Schon wieder Hunger?",
-					"Malzeit!"
-				],
-			},
-			{
-				from: 12,
-				to: 14,
-				msgs:[
-					"Schon Mittag gegessen?",
-					"was gibts zu essen?",
-					"Hunger?",
-				],
-			},
-			{
-				from: 15,
-				to: 16,
-				msgs:[
-					"Kleine Kaffe-Pause?",
-					"gibts kaffe und kuchen?",
-				],
-			},
-			{
-				from: 17,
-				to: 18,
-				msgs:[
-					"schon feierabend?",
-					"was hast du heute so gemacht?",
-				],
-			},
-			{
-				from: 19,
-				to: 21,
-				msgs:[
-					"ZOCKEN?",
-					"ich zocke was feines!",
-					"um die Zeit Programmiere ich meistens!",
-					"Schon im Bett?",
-				],
-			},
-			{
-				from: 22,
-				to: 22,
-				msgs:[
-					"jz soltest du aber langsam Schlafen!",
-					"hast du morgen keine Schule?",
-					"ich gehe jz langsam in Bett!",
-				],
-			},
-		];
+		const hours=service_storage.readStorage("botMsgs_hours");
 
 		const msgObject=hours.find(item=>
 			(
@@ -134,8 +54,24 @@
 			const index=randomIndex(msgObject.msgs.length-1);
 			msg=msgObject.msgs[index];
 		}
-	?>
-	<?=msg?>
+	?><?=msg?>
 </p>
+<table>
+<?
+	const projects=service_projects.getProjects();
+	let project;
+	for(project of projects){
+		let html="";
+		html+=`\t<tr>\n`;
+		html+=`\t\t<td class=ProjectName>${project.name}</td>\n`;
+		html+=`\t\t<td class=ProjectVersion>${project.version}</td>\n`;
+		if(project.versionTag){
+			const color=project.versionTagColor;
+			html+=`\t\t<td class=ProjectVersionTag${color?` style="color:${color}"`:""}>${project.versionTag}</td>\n`;
+		}
+		html+="\t</tr>\n";
+		?><?=html?><?	// Write 'html' into the html file!
+	}
+?></table>
 </body>
 </html>
