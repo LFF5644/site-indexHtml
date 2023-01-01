@@ -23,7 +23,7 @@ const {
 	</span>
 </h1>
 <p>
-	<span class=green title="<?=new Date()?>">Bot</span>: <?
+	<span class=green>Bot</span>: <?
 		let msg="<span title=\"zu der zeit fält mir nichts ein!\">Hallo!</span>"
 		const date=new Date();
 		const hour=date.getHours();
@@ -47,12 +47,12 @@ const {
 		}
 	?><?=msg?>
 </p>
-<h3>Projekte</h3>
+<h2>Projekte</h2>
 <?
 	const projects=service_projects.getProjects();
 	const whatShow=input.projects_show;
 ?>
-<table border=<?=input.noTableBorder?"0":"1px"?>>
+<table border=<?=input.tableBorder=="0"||!input.tableBorder?"0":"1px"?>>
 	<tr>
 		<th>Projekt</th>
 		<th class="ProjectVersion<?=whatShow=='ProjectVersion'||whatShow=='all'||!whatShow?'':' hidden'?>">Version</th>
@@ -65,19 +65,19 @@ const {
 		let html="";
 		html+=`\t<tr>\n`;
 		html+=`\t\t<td><a href="/${project.id}"${project.info?` title="${project.info}"`:""}>${project.name}</a></td>\n`;
-		html+=`\t\t<td class="ProjectVersion${whatShow=='ProjectVersion'||whatShow=='all'||!whatShow?'':' hidden'}">${project.version}</td>\n`;
+		if(whatShow=='ProjectVersion'||whatShow=='all'||!whatShow){html+=`\t\t<td>${project.version}</td>\n`;}
 		if(project.versionTag){
 			const color=project.versionTagColor;
-			html+=`\t\t<td class="ProjectVersionTag${whatShow=='ProjectVersionTag'||whatShow=='all'?'':' hidden'}"${color?` style="color:${color}"`:""}>${project.versionTag}</td>\n`;
+			if(whatShow=='ProjectVersionTag'||whatShow=='all'){html+=`\t\t<td${color?` style="color:${color}"`:""}>${project.versionTag}</td>\n`};
 		}else{
-			html+=`\t\t<td class="ProjectVersionTag${whatShow=='ProjectVersionTag'||whatShow=='all'?'':' hidden'}"></td>\n`;
+			if(whatShow=='ProjectVersionTag'||whatShow=='all'){html+=`\t\t<td></td>\n`;}
 		}
 
 		if(project.git){
 			const gitHubUrl="https://github.com/"+project.git;
-			html+=`\t\t<td class="ProjectGitRepo${whatShow=='ProjectGitRepo'||whatShow=='all'?'':' hidden'}"><a href="${gitHubUrl}">${project.git.split("/")[1]}</a></td>\n`;
+			if(whatShow=='ProjectGitRepo'||whatShow=='all'){html+=`\t\t<td><a href="${gitHubUrl}">${project.git.split("/")[1]}</a></td>\n`;}
 		}else{
-			html+=`\t\t<td class="ProjectGitRepo${whatShow=='ProjectGitRepo'||whatShow=='all'?'':' hidden'}"></td>\n`;
+			if(whatShow=='ProjectGitRepo'||whatShow=='all'){html+=`\t\t<td></td>\n`;}
 		}
 		html+="\t</tr>\n";
 		?><?=html?><?	// Write 'html' into the html file!
@@ -90,10 +90,11 @@ const {
 			<p><label><input<?=whatShow=='ProjectVersion'||!whatShow?' checked':''?> type="radio" value="ProjectVersion" name="projects_show"> Versionen anzeigen</label></p>
 			<p><label><input<?=whatShow=='ProjectVersionTag'?' checked':''?> type="radio" value="ProjectVersionTag" name="projects_show"> Versions Tag anzeigen</label></p>
 			<p><label><input<?=whatShow=='ProjectGitRepo'?' checked':''?> type="radio" value="ProjectGitRepo" name="projects_show"> GitHub Links anzeigen</label></p>
+			<p><label><input<?=whatShow=='0'?' checked':''?> type="radio" value="0" name="projects_show"> Nur Projekte anzeigen</label></p>
 			<p><label><input<?=whatShow=='all'?' checked':''?> type="radio" value="all" name="projects_show"> Alle Anzeigen</label></p>
-			<p><label><input<?=input.noTableBorder?' checked':''?> type="checkbox" value="1" name="noTableBorder"> Durchsichtige Tabelle</label></p>
+			<p><label><input<?=input.tableBorder=='0'||!input.tableBorder?'':' checked'?> type=checkbox value=1 name=tableBorder> Kacheln Anzeigen</label></p>
 
-			<p><button form=form_settings>Übernehmen</button> <button form="" onclick="location.search='';">Reset</button></p>
+			<p><button form=form_settings>Übernehmen</button> <button form="" onclick="location.href='/';">Reset</button></p>
 		</form>
 	</fieldset>
 </div>

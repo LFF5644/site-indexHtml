@@ -18,3 +18,6 @@ a:active{
 }
 .hidden{display: none;}
 button{cursor: pointer;}
+table[border="0"] td{
+	padding: 10px 10px;
+}
