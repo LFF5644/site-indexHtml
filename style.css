@@ -6,3 +6,15 @@ body{
 h1,h2,h3,h4,h5,h6{
 	margin-left: 50px;
 }
+a{
+	color: blue;
+	font-size: 110%;
+}
+a:hover{
+	color: green;
+}
+a:active{
+	color: red;
+}
+.hidden{display: none;}
+button{cursor: pointer;}
