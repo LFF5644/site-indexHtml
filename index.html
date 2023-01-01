@@ -86,7 +86,7 @@ const {
 <div style="max-width: 250px;">
 	<fieldset>
 		<legend>Einstellungen</legend>
-		<form id=form_settings>
+		<form id=form_settings method=post>
 			<p><label><input<?=whatShow=='ProjectVersion'||!whatShow?' checked':''?> type="radio" value="ProjectVersion" name="projects_show"> Versionen anzeigen</label></p>
 			<p><label><input<?=whatShow=='ProjectVersionTag'?' checked':''?> type="radio" value="ProjectVersionTag" name="projects_show"> Versions Tag anzeigen</label></p>
 			<p><label><input<?=whatShow=='ProjectGitRepo'?' checked':''?> type="radio" value="ProjectGitRepo" name="projects_show"> GitHub Links anzeigen</label></p>
