@@ -1,26 +1,28 @@
 <?
 const service_storage=service_require("server/serverStorage/serverStorage");
 const service_projects=service_require("server/projects/projects");
+const service_account=service_require("server/account/account.new");
 const {
 	randomIndex,
 	jsonStringify,
 }=globals.functions;
+const {allowed,data}=service_account.authUserByInput(input);
 ?><!DOCTYPE html>
 <!--IndexHtml update at 23.12.2022 at 23:32-->
 <html>
 <head>
 	<title>Landos Webseite</title>
+	<meta charset="utf-8">
+	<meta name=viewport content="width=device-width">
 	<link rel=stylesheet href=/css/main.css>
-	<link rel=stylesheet href=/css/main.dark.css>
+	<!--<link rel=stylesheet href=/css/main.dark.css>-->
 	<link rel=stylesheet href=/web/indexHtml/style.css>
 </head>
 <body>
 <h1>
 	Landos Webseite 
 	<span class=green title="Copierigt (ja ich habs SAVE falsch geshreiben!)">©</span>
-	<span class=red title="Hier wird immer das jzige jahr drin stehen!">
-		<?=new Date().getFullYear()?>
-	</span>
+	<span class=red title="Hier wird immer das jzige jahr drin stehen!"><?=new Date().getFullYear()?></span>
 </h1>
 <p>
 	<span class=green>Bot</span>: <?
@@ -47,6 +49,11 @@ const {
 		}
 	?><?=msg?>
 </p>
+<p>
+	Account: 
+	<a href=/account><?=allowed?data.account.nickname:"Nicht Angemeldet!"?></a>
+	<i style="font-size: 90%;"><?=allowed?"Für infos klicken":"zum Anmelden / Regestrieren Klicken"?></i>
+</p>
 <h2>Projekte</h2>
 <?
 	const projects=service_projects.getProjects();
@@ -64,7 +71,7 @@ const {
 	for(project of projects){
 		let html="";
 		html+=`\t<tr>\n`;
-		html+=`\t\t<td><a href="/${project.id}"${project.info?` title="${project.info}"`:""}>${project.name}</a></td>\n`;
+		html+=`\t\t<td><a class=project href="/${project.id}"${project.info?` title="${project.info}"`:""}>${project.name}</a></td>\n`;
 		if(whatShow=='ProjectVersion'||whatShow=='all'||!whatShow){html+=`\t\t<td>${project.version}</td>\n`;}
 		if(project.versionTag){
 			const color=project.versionTagColor;
@@ -93,10 +100,10 @@ const {
 			<p><label><input<?=whatShow=='0'?' checked':''?> type="radio" value="0" name="projects_show"> Nur Projekte anzeigen</label></p>
 			<p><label><input<?=whatShow=='all'?' checked':''?> type="radio" value="all" name="projects_show"> Alle Anzeigen</label></p>
 			<p><label><input<?=input.tableBorder=='0'||!input.tableBorder?'':' checked'?> type=checkbox value=1 name=tableBorder> Kacheln Anzeigen</label></p>
-
 			<p><button form=form_settings>Übernehmen</button> <button form="" onclick="location.href='/';">Reset</button></p>
 		</form>
 	</fieldset>
 </div>
+
 </body>
 </html>

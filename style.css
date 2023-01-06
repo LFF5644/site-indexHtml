@@ -6,14 +6,14 @@ body{
 h1,h2,h3,h4,h5,h6{
 	margin-left: 50px;
 }
-a{
+a.project{
 	color: blue;
 	font-size: 110%;
 }
-a:hover{
+a.project:hover{
 	color: green;
 }
-a:active{
+a.project:active{
 	color: red;
 }
 .hidden{display: none;}
