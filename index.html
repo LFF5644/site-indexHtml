@@ -54,6 +54,9 @@ const {allowed,data}=service_account.authUserByInput(input);
 	<a href=/account><?=allowed?data.account.nickname:"Nicht Angemeldet!"?></a>
 	<i style="font-size: 90%;"><?=allowed?"Für infos klicken":"zum Anmelden / Regestrieren Klicken"?></i>
 </p>
+<p>
+	Server Auslastung <a href=/web/serverInfo/serverInfo.html>anzeigen</a>
+</p>
 <h2>Projekte</h2>
 <?
 	const projects=service_projects.getProjects();
