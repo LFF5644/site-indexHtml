@@ -21,7 +21,7 @@ const {allowed,data}=service_account.authUserByInput(input);
 <body>
 <h1>
 	Landos Webseite 
-	<span class=green title="Copierigt (ja ich habs SAVE falsch geshreiben!)">©</span>
+	<span class=green title=Copyrigth>©</span>
 	<span class=red title="Hier wird immer das jzige jahr drin stehen!"><?=new Date().getFullYear()?></span>
 </h1>
 <p>
@@ -52,17 +52,16 @@ const {allowed,data}=service_account.authUserByInput(input);
 <p>
 	Account: 
 	<a href=/account><?=allowed?data.account.nickname:"Nicht Angemeldet!"?></a>
-	<i style="font-size: 90%;"><?=allowed?"Für infos klicken":"zum Anmelden / Registrieren Klicken"?></i>
+	<i style="font-size: 90%;"><?=allowed?"Für infos klicken":"Zum Anmelden / Registrieren klicken"?></i>
 </p>
 
 <h2>Links</h2>
-<p><li><a href=/web/serverInfo/serverInfo.html>Server Auslastung / Infomationen</a></li></p>
-<p><li><a href=/ls>Datei Explorer</a></li></p>
-<p><li><a href=/home>Meine Browser Homepage</a></li></p>
+<p><li><a href=/web/serverInfo/serverInfo.html>Server-Auslastung /-Infomationen</a></li></p>
+<p><li><a href=/ls>Datei-Explorer</a></li></p>
+<p><li><a href=/home>Meine Browser-Homepage</a></li></p>
 <p><li><a href="/ls#/z">Andere Sachen</a></li></p>
 
-<h2>Projekte</h2>
-<?
+<h2>Projekte</h2><?
 	const projects=service_projects.getProjects();
 	const whatShow=input.projects_show;
 ?>
@@ -102,11 +101,11 @@ const {allowed,data}=service_account.authUserByInput(input);
 		<legend>Einstellungen</legend>
 		<form id=form_settings method=post>
 			<p><label><input<?=whatShow=='ProjectVersion'||!whatShow?' checked':''?> type="radio" value="ProjectVersion" name="projects_show"> Versionen anzeigen</label></p>
-			<p><label><input<?=whatShow=='ProjectVersionTag'?' checked':''?> type="radio" value="ProjectVersionTag" name="projects_show"> Versions Tag anzeigen</label></p>
+			<p><label><input<?=whatShow=='ProjectVersionTag'?' checked':''?> type="radio" value="ProjectVersionTag" name="projects_show"> Versions-Tag anzeigen</label></p>
 			<p><label><input<?=whatShow=='ProjectGitRepo'?' checked':''?> type="radio" value="ProjectGitRepo" name="projects_show"> GitHub Links anzeigen</label></p>
 			<p><label><input<?=whatShow=='0'?' checked':''?> type="radio" value="0" name="projects_show"> Nur Projekte anzeigen</label></p>
-			<p><label><input<?=whatShow=='all'?' checked':''?> type="radio" value="all" name="projects_show"> Alle Anzeigen</label></p>
-			<p><label><input<?=input.tableBorder=='0'||!input.tableBorder?'':' checked'?> type=checkbox value=1 name=tableBorder> Kacheln Anzeigen</label></p>
+			<p><label><input<?=whatShow=='all'?' checked':''?> type="radio" value="all" name="projects_show"> Alle anzeigen</label></p>
+			<p><label><input<?=input.tableBorder=='0'||!input.tableBorder?'':' checked'?> type=checkbox value=1 name=tableBorder> Rahmen anzeigen</label></p>
 			<p><button form=form_settings>Übernehmen</button> <button form="" onclick="location.href='/';">Reset</button></p>
 		</form>
 	</fieldset>
