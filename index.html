@@ -54,12 +54,13 @@ const {allowed,data}=service_account.authUserByInput(input);
 	<a href=/account><?=allowed?data.account.nickname:"Nicht Angemeldet!"?></a>
 	<i style="font-size: 90%;"><?=allowed?"Für infos klicken":"zum Anmelden / Regestrieren Klicken"?></i>
 </p>
-<p>
-	Server Auslastung <a href=/web/serverInfo/serverInfo.html>anzeigen</a>
-</p>
-<p>
-	Datei Explorer <a href=/ls>öffnen</a>
-</p>
+
+<h2>Links</h2>
+<p><li><a href=/web/serverInfo/serverInfo.html>Server Auslastung / Infomationen</a></li></p>
+<p><li><a href=/ls>Datei Explorer</a></li></p>
+<p><li><a href=/home>meine NEUE Browser Startseite</a></li></p>
+<p><li><a href="/ls#/z">andere sachen</a></li></p>
+
 <h2>Projekte</h2>
 <?
 	const projects=service_projects.getProjects();
@@ -110,6 +111,11 @@ const {allowed,data}=service_account.authUserByInput(input);
 		</form>
 	</fieldset>
 </div>
+
+<h2>Verweise</h2>
+<p><li><a title="Entwickler: Yaroslav Rekhtieta" href=//y4r3.l3p3.de>y4r3.l3p3.de</a></li></p>
+<p><li><a title="Entwickler: Simon *" href=//hoffsite.de>Hoffsite.de</a></li></p>
+<p><li><a title="Entwickler: Littleclone (künstlername)" href=//littleclone.yuumilink.de>littleclone.yuumilink.de</a></li></p>
 
 </body>
 </html>
