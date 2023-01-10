@@ -2,7 +2,7 @@
 
 function BatteryService(battery,start=false){
 	//const batteryLevel=window.batteryLevel||0;
-	const batteryLevel=battery.level*100;
+	const batteryLevel=Math.round(battery.level*100);
 	const batteryIsCharging=battery.charging;
 	const dischargingTime=battery.dischargingTime;
 	const chargingTime=battery.chargingTime;
