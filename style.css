@@ -1,13 +1,9 @@
-body{
-	max-width: 600px;
-	margin: 0 auto;
-	padding: 0 20px;
-}
-h1,h2,h3,h4,h5,h6{
-	margin-left: 50px;
-}
 a.project{
 	color: blue;
+	font-size: 110%;
+}
+a.project.old{
+	color: red;
 	font-size: 110%;
 }
 a.project:hover{
@@ -16,7 +12,6 @@ a.project:hover{
 a.project:active{
 	color: red;
 }
-.hidden{display: none;}
 button{cursor: pointer;}
 table[border="0"] td{
 	padding: 10px 10px;
