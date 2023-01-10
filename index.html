@@ -84,7 +84,7 @@ const {allowed,data}=service_account.authUserByInput(input);
 		if(project.adminsOnly){continue;}
 		let html="";
 		html+=`\t<tr>\n`;
-		html+=`\t\t<td><a${project.old?` onclick="return confirm('WARNUNG DAS PROJECT IST VERALTET!\\n\\ndieses Project habe ich lange nicht angefast das heisst das manche sachen nicht mehr functoniren können!\\n\\nTRTZDEM ÖFFNEN?')"`:""} class=${project.old?'"project old"':"project"} href="/${project.id}"${project.info?` title="${project.info}"`:""}>${project.name}</a></td>\n`;
+		html+=`\t\t<td><a${project.old?` onclick="return oldProject();"`:""} class=${project.old?'"project old"':"project"} href="/${project.id}"${project.info?` title="${project.info}"`:""}>${project.name}</a></td>\n`;
 		if(whatShow=='ProjectVersion'||whatShow=='all'||!whatShow){html+=`\t\t<td>${project.version}</td>\n`;}
 		if(project.versionTag){
 			const color=project.versionTagColor;

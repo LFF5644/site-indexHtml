@@ -39,3 +39,6 @@ if(navigator.getBattery){
 	
 	setInterval(()=>{navigator.getBattery().then(BatteryService)},2e3);
 }
+function oldProject(){
+	return confirm('WARNUNG DAS PROJECT IST VERALTET!\n\ndieses Project habe ich lange nicht angefast das heisst das manche sachen nicht mehr functoniren können!\n\nTRTZDEM ÖFFNEN?');
+}
