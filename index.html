@@ -5,7 +5,7 @@ const service_account=service_require("server/account/account.new");
 const {
 	randomIndex,
 	jsonStringify,
-	importHead
+	importHead,
 }=globals.functions;
 const {allowed,data}=service_account.authUserByInput(input);
 ?><!DOCTYPE html>
@@ -16,7 +16,7 @@ const {allowed,data}=service_account.authUserByInput(input);
 	input,
 	css:[
 		"/css/main.css",
-		"/css/oneAttrClass.css?imports=red,green",
+		"/css/dynamic.css?imports=red,green",
 		"/web/indexHtml/style.css",
 	],
 	script:[
