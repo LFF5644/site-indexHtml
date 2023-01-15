@@ -2,10 +2,12 @@
 const service_storage=service_require("server/serverStorage/serverStorage");
 const service_projects=service_require("server/projects/projects");
 const service_account=service_require("server/account/account.new");
+const service_spotify=service_require("server/spotify/spotify");
 const {
 	randomIndex,
 	jsonStringify,
 	importHead,
+	overflowRemove,
 }=globals.functions;
 const {allowed,data}=service_account.authUserByInput(input);
 ?><!DOCTYPE html>
@@ -60,7 +62,27 @@ const {allowed,data}=service_account.authUserByInput(input);
 	<a href=/account><?=allowed?data.account.nickname:"Nicht Angemeldet!"?></a>
 	<i style="font-size: 90%;"><?=allowed?"Für infos klicken":"Zum Anmelden / Registrieren klicken"?></i>
 </p>
-<p class=hidden id=battery></p>
+<?let spotifyInfo="";spotify:{
+	if(!service_spotify.infos){break spotify;}
+	const {
+		playing,
+		track:{
+			name,
+			imgs,
+			mp3,
+			url,
+		},
+	}=service_spotify.infos;
+	if(!playing){break spotify;}
+	spotifyInfo=`
+		<p>
+			<a href="${url}">Spotify</a>
+			: 
+			<img alt=songIcon src="${imgs[2].url}" onclick="location.href='${imgs[1].url}'" height=20 align=top> 
+			<span title="${name}" onclick="if(confirm('Möchten sie in \\'${name}\\' reinhören?')){new Audio('${mp3}').play()}">${overflowRemove(name,20)}</span>
+		</p>
+	`.split("\t").join("").split("\n").join("")+"\n";
+}?><?=spotifyInfo?><p class=hidden id=battery></p>
 
 <h2>Links</h2>
 <p><li><a href=/web/serverInfo/serverInfo.html>Server-Auslastung /-Infomationen</a></li></p>
