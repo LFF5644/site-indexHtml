@@ -43,6 +43,30 @@ function oldProject(){
 	// if(return == true) {open project};
 	return confirm('WARNUNG DAS PROJECT IST VERALTET!\n\ndieses Project habe ich lange nicht angefast das heisst das manche sachen nicht mehr functoniren können!\n\nTRTZDEM ÖFFNEN?');
 }
+function spotify_audioToggle(btn,audio){
+	if(audio.paused){
+		try{
+			audio.play();
+		}catch(e){
+			if(confirm("Fehler! Es konnte der Song nicht abgespilt Werden!\nVersuche die seite neu zu laden!\n\nSeite neu laden?")){
+				location.reload();
+			}else{return false;}
+		}
+		audio.onended=()=>{
+			btn.innerText=">";
+			btn.style.color="unset";
+		};
+		btn.innerText="||";
+		btn.style.color="orange";
+
+	}else{
+		audio.pause();
+		audio.currentTime=0;
+		btn.innerText=">";
+		btn.style.color="unset";
+
+	}
+}
 
 if(navigator.getBattery){
 	navigator.getBattery().then(b=>BatteryService(b,true));
