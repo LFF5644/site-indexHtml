@@ -79,8 +79,10 @@ const {allowed,data}=service_account.authUserByInput(input);
 			<span title="Was Ich jz grade auf Spotify höre!">Spotify</span>
 			: 
 			<img alt=songIcon src="${imgs[2].url}" onclick="location.href='${imgs[1].url}'" height=20 align=top> 
-			${mp3?`<audio id="audio_spotify" src="${mp3}" autobuffer></audio>`:""}
-			${mp3?`<button onclick="spotify_audioToggle(this,document.getElementById('audio_spotify'))">></button> `:""}
+			${mp3?`
+				<audio id="audio_spotify" src="${mp3}" autobuffer></audio>
+				<button onclick="spotify_audioToggle(this,document.getElementById('audio_spotify'))">></button> 
+			`:""}
 			<a onclick="return confirm('ACHTUNG! Weiterleitung auf Spotify!\\n\\n${url}');" href="${url}" title="${name}">${overflowRemove(name,20)}</a>
 		</p>
 	`.split("\t").join("").split("\n").join("")+"\n";
