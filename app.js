@@ -43,7 +43,7 @@ function oldProject(){
 	// if(return == true) {open project};
 	return confirm('WARNUNG DAS PROJECT IST VERALTET!\n\ndieses Project habe ich lange nicht angefast das heisst das manche sachen nicht mehr functoniren können!\n\nTRTZDEM ÖFFNEN?');
 }
-function spotify_audioToggle(btn,audio){
+function spotify_audioToggle(img,audio){
 	if(audio.paused){
 		try{
 			audio.play();
@@ -53,17 +53,14 @@ function spotify_audioToggle(btn,audio){
 			}else{return false;}
 		}
 		audio.onended=()=>{
-			btn.innerText=">";
-			btn.style.color="unset";
+			img.src="/files/img/playBTN.png";
 		};
-		btn.innerText="||";
-		btn.style.color="orange";
+		img.src="/files/img/pauseBTN.png";
 
 	}else{
 		audio.pause();
 		audio.currentTime=0;
-		btn.innerText=">";
-		btn.style.color="unset";
+		img.src="/files/img/playBTN.png";
 
 	}
 }
