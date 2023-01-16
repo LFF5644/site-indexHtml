@@ -41,7 +41,7 @@ function oldProject(){
 	// if user clicked on an old project;
 	// if(return == false) {nothing happened};
 	// if(return == true) {open project};
-	return confirm('WARNUNG DAS PROJECT IST VERALTET!\n\ndieses Project habe ich lange nicht angefast das heisst das manche sachen nicht mehr functoniren können!\n\nTRTZDEM ÖFFNEN?');
+	return confirm('WARNUNG DAS PROJEKT IST VERALTET!\n\ndieses Projekt habe ich lange nicht angefasst das heisst das manche Sachen nicht mehr funktionieren können!\n\nTROTZDEM ÖFFNEN?');
 }
 function spotify_audioToggle(img,audio){
 	if(audio.paused){
