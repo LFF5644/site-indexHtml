@@ -19,7 +19,7 @@ const {allowed,data}=service_account.authUserByInput(input);
 	title:"Landos Webseite!",
 	css:[
 		"/css/main.css",
-		"/css/dynamic.css?imports=red,green",
+		"/css/dynamic.css?imports=red,green,underLineHOVER,cursorPOINTER",
 		"/web/indexHtml/style.css",
 	],
 	script:[
@@ -58,7 +58,7 @@ const {allowed,data}=service_account.authUserByInput(input);
 	?><?=msg?>
 </p>
 <p>
-	Account: 
+	<span class="underLineHOVER cursorPOINTER" onclick="location.href='/account'">Account</span>: 
 	<a href=/account><?=allowed?data.account.nickname:"Nicht Angemeldet!"?></a>
 	<i style="font-size: 90%;"><?=allowed?"Für infos klicken":"Zum Anmelden / Registrieren klicken"?></i>
 </p>
@@ -76,12 +76,12 @@ const {allowed,data}=service_account.authUserByInput(input);
 	if(!playing){break spotify;}
 	spotifyInfo=`
 		<p>
-			<span title="Was Ich jz grade auf Spotify höre!">Spotify</span>
+			<span class="underLineHOVER cursorPOINTER" onclick="location.href='/currently-playing'" title="Was Ich jz grade auf Spotify höre!">Spotify</span>
 			: 
-			<img alt=songIcon src="${imgs[2].url}" onclick="location.href='${imgs[1].url}'" height=20 align=top> 
+			<img class=cursorPOINTER alt=songIcon src="${imgs[2].url}" onclick="location.href='${imgs[1].url}'" height=20 align=top> 
 			${mp3?`
 				<audio id="audio_spotify" src="${mp3}" autobuffer></audio>
-				<img align=top height=20 src="/files/img/playBTN.png" onclick="spotify_audioToggle(this,document.getElementById('audio_spotify'))"> 
+				<img align=top height=20 class=cursorPOINTER src="/files/img/playBTN.png" onclick="spotify_audioToggle(this,document.getElementById('audio_spotify'))"> 
 			`:""}
 			<a onclick="return confirm('ACHTUNG! Weiterleitung auf Spotify!\\n\\n${url}\\n\\nVoller Liedname: '+this.title);" href="${url}" title="${name}">${overflowRemove(name,20)}</a>
 		</p>
