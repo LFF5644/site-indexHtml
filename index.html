@@ -14,23 +14,31 @@ const {allowed,data}=service_account.authUserByInput(input);
 <!--IndexHtml update at 23.12.2022 at 23:32-->
 <html>
 <head>
-<?=importHead({
-	input,
-	title:"Landos Webseite!",
-	css:[
-		"/css/main.css",
-		"/css/dynamic.css?imports=red,green,underLineHOVER,cursorPOINTER",
-		"/web/indexHtml/style.css",
-	],
-	script:[
-		"/web/indexHtml/app.js",
-	],
-})?></head>
+	<?=importHead({
+		input,
+		title:"Landos Webseite!",
+		css:[
+			"/css/main.css",
+			"/css/dynamic.css?imports=red,green,underLineHOVER,cursorPOINTER",
+			"/web/indexHtml/style.css",
+		],
+		script:[
+			"/web/indexHtml/app.js",
+		],
+	})?>
+	<link rel=canonical href=https://lff.one>
+	<meta name=author content="Lando Fernandez-Falk">
+	<meta name=description content="Lando Fernandez-Falk seine Webseite!">
+	<meta name=keywords content="HTML, JavaScript, Programm, LFF5644, LFF, Tostedt, Hamburg, Lando, 5644, Lando5644, Lando Fernandez-Falk, lando.fernandez-falk, Lando Fernandez Falk">
+	<meta property=og:type content=website>
+	<meta property=og:url content=https://lff.one>
+	<meta name=robots content=index>
+</head>
 <body>
 <h1>
 	Landos Webseite 
-	<span class=green title=Copyrigth>©</span>
-	<span class=red title="Hier wird immer das jzige jahr drin stehen!"><?=new Date().getFullYear()?></span>
+	<span class=green title=Copyright>©</span>
+	<span class=red title="Hier wird immer das jzige Jahr drin stehen!"><?=new Date().getFullYear()?></span>
 </h1>
 <p>
 	<span class=green>Bot</span>: <?
@@ -83,7 +91,7 @@ const {allowed,data}=service_account.authUserByInput(input);
 				<audio id="audio_spotify" src="${mp3}" autobuffer></audio>
 				<img align=top height=20 class=cursorPOINTER src="/files/img/playBTN.png" onclick="spotify_audioToggle(this,document.getElementById('audio_spotify'))"> 
 			`:""}
-			<a onclick="return confirm('ACHTUNG! Weiterleitung auf Spotify!\\n\\n${url}\\n\\nVoller Liedname: '+this.title);" href="${url}" title="${name}">${overflowRemove(name,20)}</a>
+			<a onclick="return confirm('ACHTUNG! Weiterleitung auf Spotify!\\n\\n${url}\\n\\nVoller Songname: '+this.title);" href="${url}" title="${name}">${overflowRemove(name,20)}</a>
 		</p>
 	`.split("\t").join("").split("\n").join("")+"\n";
 }?><?=spotifyInfo?><p class=hidden id=battery></p>
@@ -93,6 +101,7 @@ const {allowed,data}=service_account.authUserByInput(input);
 <p><li><a href=/ls>Datei-Explorer</a></li></p>
 <p><li><a href=/home>Meine Browser-Homepage</a></li></p>
 <p><li><a href="/ls#/z">Andere Sachen</a></li></p>
+<p><li><a href="//dev.lff.one">Developer/Programmierer/Entwickler Stand</a></li></p>
 
 <h2>Projekte</h2><?
 	const projects=service_projects.getProjects();
