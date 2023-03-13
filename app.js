@@ -30,7 +30,7 @@ function BatteryService(battery,start=false){
 			console.log("set!");
 			window.interval_img=setInterval(()=>{
 				document.getElementById("img_lowBattery").style.opacity=Math.sin(Date.now()/200)*.25 +.75;
-			},80,);
+			},80);
 		}
 	}else{
 		clearInterval(window.interval_img);
