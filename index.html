@@ -1,162 +1,161 @@
 <?
-const service_storage=service_require("server/serverStorage/serverStorage");
-const service_projects=service_require("server/projects/projects");
-const service_account=service_require("server/account/account.new");
-const service_spotify=service_require("server/spotify/spotify");
+const services={
+	storage: service_require("server/serverStorage/serverStorage"),
+	projects: service_require("server/projects/projects"),
+	account: service_require("server/account/account.new"),
+	spotify: service_require("server/spotify/spotify"),
+};
 const {
 	randomIndex,
 	jsonStringify,
 	importHead,
 	overflowRemove,
 }=globals.functions;
-const {allowed,data}=service_account.authUserByInput(input);
+const {allowed,data}=services.account.authUserByInput(input);
 ?><!DOCTYPE html>
 <!--IndexHtml update at 23.12.2022 at 23:32-->
 <html>
-<head>
-	<?=importHead({
-		input,
-		title:"Landos Webseite!",
-		css:[
-			"/css/main.css",
-			"/css/dynamic.css?imports=red,green,underLineHOVER,cursorPOINTER",
-			"/web/indexHtml/style.css",
-		],
-		script:[],
-	})?>
-	<link rel=canonical href=https://lff.one>
-	<meta name=author content="Lando Fernandez-Falk">
-	<meta name=description content="Lando Fernandez-Falk seine Webseite!">
-	<meta name=keywords content="HTML, JavaScript, Programm, LFF5644, LFF, Tostedt, Hamburg, Lando, 5644, Lando5644, Lando Fernandez-Falk, lando.fernandez-falk, Lando Fernandez Falk">
-	<meta property=og:type content=website>
-	<meta property=og:url content=https://lff.one>
-	<meta name=robots content=index>
-</head>
-<body>
-<h1>
-	Landos Webseite 
-	<span class=green title=Copyright>©</span>
-	<span class=red title="Hier wird immer das jzige Jahr drin stehen!"><?=new Date().getFullYear()?></span>
-</h1>
-<p>
-	<span class=green>Bot</span>: <?
-		let msg="<span title=\"zu der zeit fält mir nichts ein!\">Hallo!</span>"
-		const date=new Date();
-		const hour=date.getHours();
-		const hours=service_storage.readStorage("botMsgs_hours");
-
-		const msgObject=hours.find(item=>
-			(
-				item.from<=hour&&
-				item.to>=hour
-			)||
-			(
-				item.allowed?
-					item.allowed:
-					[]
-			)
-				.includes(hour)
-		);
-		if(msgObject){
-			const index=randomIndex(msgObject.msgs.length-1);
-			msg=msgObject.msgs[index];
-		}
-	?><?=msg?>
-</p>
-<p>
-	<span class="underLineHOVER cursorPOINTER" onclick="location.href='/account'">Account</span>: 
-	<a href=/account><?=allowed?data.account.nickname:"Nicht Angemeldet!"?></a>
-	<i style="font-size: 90%;"><?=allowed?"Für infos klicken":"Zum Anmelden / Registrieren klicken"?></i>
-</p>
-<?let spotifyInfo="";spotify:{
-	if(!service_spotify.infos){break spotify;}
-	const {
-		playing,
-		track:{
-			name,
-			imgs,
-			mp3,
-			url,
-		},
-	}=service_spotify.infos;
-	if(!playing){break spotify;}
-	spotifyInfo=`
+	<head>
+		<?=importHead({
+			input,
+			title:"Landos Webseite!",
+			css:[
+				"/css/main.css",
+				"/css/dynamic.css?imports=red,green,underLineHOVER,cursorPOINTER",
+				"/web/indexHtml/style.css",
+			],
+			script:[],
+		})?>
+		<link rel=canonical href=https://lff.one>
+		<meta name=author content="Lando Fernandez-Falk">
+		<meta name=description content="Lando Fernandez-Falk seine Webseite!">
+		<meta name=keywords content="HTML, JavaScript, Programm, LFF5644, LFF, Tostedt, Hamburg, Lando, 5644, Lando5644, Lando Fernandez-Falk, lando.fernandez-falk, Lando Fernandez Falk">
+		<meta property=og:type content=website>
+		<meta property=og:url content=https://lff.one>
+		<meta name=robots content=index>
+	</head>
+	<body>
+		<h1>
+			Landos Webseite 
+			<span class=green title=Copyright>©</span>
+			<span class=red title="Hier wird immer das jzige Jahr drin stehen!"><?=new Date().getFullYear()?></span>
+		</h1>
 		<p>
-			<span class="underLineHOVER cursorPOINTER" onclick="location.href='/currently-playing'" title="Was Ich jz grade auf Spotify höre!">Spotify</span>
-			: 
-			<img class=cursorPOINTER alt=songIcon src="${imgs[2].url}" onclick="location.href='${imgs[1].url}'" height=20 align=top> 
-			${mp3?`
-				<audio id="audio_spotify" src="${mp3}" autobuffer></audio>
-				<img align=top height=20 class=cursorPOINTER src="/files/img/playBTN.png" onclick="spotify_audioToggle(this,document.getElementById('audio_spotify'))"> 
-			`:""}
-			<a onclick="return confirm('ACHTUNG! Weiterleitung auf Spotify!\\n\\n${url}\\n\\nVoller Songname: '+this.title);" href="${url}" title="${name}">${overflowRemove(name,20)}</a>
+			<span class=green>Bot</span>: <?
+				let msg="<span title=\"zu der zeit fält mir nichts ein!\">Hallo!</span>"
+				const date=new Date();
+				const hour=date.getHours();
+				const hours=services.storage.readStorage("botMsgs_hours");
+
+				const msgObject=hours.find(item=>
+					(
+						item.from<=hour&&
+						item.to>=hour
+					)||
+					(
+						item.allowed?
+							item.allowed:
+							[]
+					)
+						.includes(hour)
+				);
+				if(msgObject){
+					const index=randomIndex(msgObject.msgs.length-1);
+					msg=msgObject.msgs[index];
+				}
+			?><?=msg?>
 		</p>
-	`.split("\t").join("").split("\n").join("")+"\n";
-}?><?=spotifyInfo?><p class=hidden id=battery></p>
+		<p>
+			<span class="underLineHOVER cursorPOINTER" onclick="location.href='/account'">Account</span>: 
+			<a href=/account><?=allowed?data.account.nickname:"Nicht Angemeldet!"?></a>
+			<i style="font-size: 90%;"><?=allowed?"Für infos klicken":"Zum Anmelden / Registrieren klicken"?></i>
+		</p>
+		<?let spotifyInfo="";spotify:{
+			if(!services.spotify.infos){break spotify;}
+			const {
+				playing,
+				track:{
+					name,
+					imgs,
+					mp3,
+					url,
+				},
+			}=services.spotify.infos;
+			if(!playing){break spotify;}
+			spotifyInfo=`
+				<p>
+					<span class="underLineHOVER cursorPOINTER" onclick="location.href='/currently-playing'" title="Was Ich jz grade auf Spotify höre!">Spotify</span>
+					: 
+					<img class=cursorPOINTER alt=songIcon src="${imgs[2].url}" onclick="location.href='${imgs[1].url}'" height=20 align=top> 
+					${mp3?`
+						<audio id="audio_spotify" src="${mp3}" autobuffer></audio>
+						<img align=top height=20 class=cursorPOINTER src="/files/img/playBTN.png" onclick="spotify_audioToggle(this,document.getElementById('audio_spotify'))"> 
+					`:""}
+					<a onclick="return confirm('ACHTUNG! Weiterleitung auf Spotify!\\n\\n${url}\\n\\nVoller Songname: '+this.title);" href="${url}" title="${name}">${overflowRemove(name,20)}</a>
+				</p>
+			`.split("\t").join("").split("\n").join("")+"\n";
+		}?><?=spotifyInfo?><p class=hidden id=battery></p>
 
-<h2>Links</h2>
-<p><li><a href=/web/serverInfo/serverInfo.html>Server-Auslastung /-Infomationen</a></li></p>
-<p><li><a href=/ls>Datei-Explorer</a></li></p>
-<p><li><a href=/home>Meine Browser-Homepage</a></li></p>
-<p><li><a href="/ls#/z">Andere Sachen</a></li></p>
-<p><li><a href="//dev.lff.one">Developer/Programmierer/Entwickler Stand</a></li></p>
+		<h2>Links</h2>
+		<p><li><a href=/web/serverInfo/serverInfo.html>Server-Auslastung /-Infomationen</a></li></p>
+		<p><li><a href=/ls>Datei-Explorer</a></li></p>
+		<p><li><a href=/home>Meine Browser-Homepage</a></li></p>
+		<p><li><a href="/ls#/z">Andere Sachen</a></li></p>
+		<p><li><a href="//dev.lff.one">Developer/Programmierer/Entwickler Stand</a></li></p>
 
-<h2>Projekte</h2><?
-	const projects=service_projects.getProjects();
-	const whatShow=input.projects_show;
-?>
-<table border=<?=input.tableBorder=="0"||!input.tableBorder?"0":"1px"?>>
-	<tr>
-		<th>Projekt</th>
-		<th class="ProjectVersion<?=whatShow=='ProjectVersion'||whatShow=='all'||!whatShow?'':' hidden'?>">Version</th>
-		<th class="ProjectVersionTag<?=whatShow=='ProjectVersionTag'||whatShow=='all'?'':' hidden'?>">Versions Tag</th>
-		<th class="ProjectGitRepo<?=whatShow=='ProjectGitRepo'||whatShow=='all'?'':' hidden'?>">GitHub</th>
-	</tr>
+		<h2>Projekte</h2><?
+			const projects=services.projects.getProjects();
+			const whatShow=input.projects_show;
+		?>
+		<table border=<?=input.tableBorder==="0"||!input.tableBorder?"0":"1px"?>>
+			<tr>
+				<th>Projekt</th>
+				<th class="ProjectVersion<?=whatShow==='ProjectVersion'||whatShow==='all'||!whatShow?'':' hidden'?>">Version</th>
+				<th class="ProjectVersionTag<?=whatShow==='ProjectVersionTag'||whatShow==='all'?'':' hidden'?>">Versions Tag</th>
+				<th class="ProjectGitRepo<?=whatShow==='ProjectGitRepo'||whatShow==='all'?'':' hidden'?>">GitHub</th>
+			</tr>
 <?
-	let project; 
-	for(project of projects){
-		if(project.adminsOnly){continue;}
-		let html="";
-		html+=`\t<tr>\n`;
-		html+=`\t\t<td><a${project.old?` onclick="return oldProject();"`:""} class=${project.old?'"project old"':"project"} href="/${project.id}"${project.info?` title="${project.info}"`:""}>${project.name}</a></td>\n`;
-		if(whatShow=='ProjectVersion'||whatShow=='all'||!whatShow){html+=`\t\t<td>${project.version}</td>\n`;}
-		if(project.versionTag){
-			const color=project.versionTagColor;
-			if(whatShow=='ProjectVersionTag'||whatShow=='all'){html+=`\t\t<td${color?` style="color:${color}"`:""}>${project.versionTag}</td>\n`};
-		}else{
-			if(whatShow=='ProjectVersionTag'||whatShow=='all'){html+=`\t\t<td></td>\n`;}
-		}
+			const tabs="\t\t\t\t";
+			const tabs_parens="\t\t\t";
+			let project;
+			for(project of projects){
+				if(project.adminsOnly) continue;
+				let html="";
+				html+=`${tabs_parens}<tr>\n`;
+				html+=`${tabs}<td><a${project.old?` onclick="return oldProject();"`:""} class=${project.old?'"project old"':"project"} href="/${project.id}"${project.info?` title="${project.info}"`:""}>${project.name}</a></td>\n`;
+				if(whatShow==='ProjectVersion'||whatShow==='all'||!whatShow){html+=`${tabs}<td>${project.version}</td>\n`;}
+				if(project.versionTag){
+					const color=project.versionTagColor;
+					if(whatShow==='ProjectVersionTag'||whatShow==='all'){html+=`${tabs}<td${color?` style="color:${color}"`:""}>${project.versionTag}</td>\n`};
+				}else{
+					if(whatShow==='ProjectVersionTag'||whatShow==='all'){html+=`${tabs}<td></td>\n`;}
+				}
 
-		if(project.git){
-			const gitHubUrl="https://github.com/"+project.git;
-			if(whatShow=='ProjectGitRepo'||whatShow=='all'){html+=`\t\t<td><a href="${gitHubUrl}">${project.git.split("/")[1]}</a></td>\n`;}
-		}else{
-			if(whatShow=='ProjectGitRepo'||whatShow=='all'){html+=`\t\t<td></td>\n`;}
-		}
-		html+="\t</tr>\n";
-		?><?=html?><?	// Write 'html' into the html file!
-	}
-?></table>
-<div style="max-width: 250px;">
-	<fieldset>
-		<legend>Einstellungen</legend>
-		<form id=form_settings method=post>
-			<p><label><input<?=whatShow=='ProjectVersion'||!whatShow?' checked':''?> type=radio value=ProjectVersion name=projects_show> Versionen anzeigen</label></p>
-			<p><label><input<?=whatShow=='ProjectVersionTag'?' checked':''?> type=radio value=ProjectVersionTag name=projects_show> Versions-Tag anzeigen</label></p>
-			<p><label><input<?=whatShow=='ProjectGitRepo'?' checked':''?> type=radio value=ProjectGitRepo name=projects_show> GitHub Links anzeigen</label></p>
-			<p><label><input<?=whatShow=='0'?' checked':''?> type=radio value=0 name=projects_show> Nur Projekte anzeigen</label></p>
-			<p><label><input<?=whatShow=='all'?' checked':''?> type=radio value=all name=projects_show> Alle anzeigen</label></p>
-			<p><label><input<?=input.tableBorder=='0'||!input.tableBorder?'':' checked'?> type=checkbox value=1 name=tableBorder> Rahmen anzeigen</label></p>
-			<p><button form=form_settings>Übernehmen</button> <button form="" onclick="location.href='/';">Reset</button></p>
-		</form>
-	</fieldset>
-</div>
+				if(project.git){
+					const gitHubUrl="https://github.com/"+project.git;
+					if(whatShow==='ProjectGitRepo'||whatShow==='all'){html+=`${tabs}<td><a href="${gitHubUrl}">${project.git.split("/")[1]}</a></td>\n`;}
+				}else{
+					if(whatShow==='ProjectGitRepo'||whatShow==='all'){html+=`${tabs}<td></td>\n`;}
+				}
+				html+=`${tabs_parens}</tr>\n`;
+				?><?=html?><?	// Write 'html' into the html file!
+			}
+		?>		</table>
+		<div style="max-width: 250px;">
+			<fieldset>
+				<legend>Einstellungen</legend>
+				<form id=form_settings method=post>
+					<p><label><input<?=whatShow==='ProjectVersion'||!whatShow?' checked':''?> type=radio value=ProjectVersion name=projects_show> Versionen anzeigen</label></p>
+					<p><label><input<?=whatShow==='ProjectVersionTag'?' checked':''?> type=radio value=ProjectVersionTag name=projects_show> Versions-Tag anzeigen</label></p>
+					<p><label><input<?=whatShow==='ProjectGitRepo'?' checked':''?> type=radio value=ProjectGitRepo name=projects_show> GitHub Links anzeigen</label></p>
+					<p><label><input<?=whatShow==='0'?' checked':''?> type=radio value=0 name=projects_show> Nur Projekte anzeigen</label></p>
+					<p><label><input<?=whatShow==='all'?' checked':''?> type=radio value=all name=projects_show> Alle anzeigen</label></p>
+					<p><label><input<?=input.tableBorder==='0'||!input.tableBorder?'':' checked'?> type=checkbox value=1 name=tableBorder> Rahmen anzeigen</label></p>
+					<p><button form=form_settings>Übernehmen</button> <button form="" onclick="location.href='/';">Reset</button></p>
+				</form>
+			</fieldset>
+		</div>
 
-<h2>Verweise</h2>
-<p><li><a title="Entwickler: Yaroslav Rekhtieta" href=//y4r3.l3p3.de>y4r3.l3p3.de</a></li></p>
-<p><li><a title="Entwickler: Simon *" href=//hoffsite.de>Hoffsite.de</a></li></p>
-<p><li><a title="Entwickler: Littleclone (Künstlername)" href=//littleclone.yuumilink.de>littleclone.yuumilink.de</a></li></p>
-
-<script src=/web/indexHtml/app.js></script>
-</body>
+		<script src=/web/indexHtml/app.js></script>
+	</body>
 </html>
