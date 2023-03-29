@@ -4,6 +4,7 @@ const services={
 	projects: service_require("server/projects/projects"),
 	account: service_require("server/account/account.new"),
 	spotify: service_require("server/spotify/spotify"),
+	minecraftServer: service_require("web/minecraftServerInfo/minecraftServerInfo"),
 };
 const {
 	randomIndex,
@@ -95,7 +96,45 @@ const {allowed,data}=services.account.authUserByInput(input);
 				</p>
 			`.split("\t").join("").split("\n").join("")+"\n";
 		}?><?=spotifyInfo?><p class=hidden id=battery></p>
-
+		<?spotifyInfo:{
+			let html="";
+			if(
+				!services.minecraftServer.serviceRunning||
+				services.minecraftServer.status
+					.filter(item=>
+						item.socketOnline&&
+						item.running&&
+						item.players.length>0
+					)
+					.length===0
+			) break spotifyInfo;
+			const servers=services.minecraftServer.status
+				.filter(item=>
+					item.socketOnline&&
+					item.running&&
+					item.players.length>0
+				);
+			
+			const onlinePlayers=servers
+				.map(item=>item.players.length)
+				.filter(item=>item!==0)
+				.reduce((x,y)=>x+y)
+			html=(`
+				<p>
+				<span 
+					class="underLineHOVER cursorPOINTER" 
+					onclick="location.href='/minecraftServerInfo'" 
+					title="Zur Server Übersicht!"
+					>
+						Minecraft-Server
+				</span>
+				: <b>${onlinePlayers}</b> Spieler ${onlinePlayers===1?"ist":"sind"} Aktiv
+				</p>
+			`)
+				.split("\t").join("")
+				.split("\n").join("")
+			?><?="\n\t\t"+html+"\n"?><?
+		}?>
 		<h2>Links</h2>
 		<p><li><a href=/web/serverInfo/serverInfo.html>Server-Auslastung /-Infomationen</a></li></p>
 		<p><li><a href=/ls>Datei-Explorer</a></li></p>
