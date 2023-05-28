@@ -1,17 +1,20 @@
 <?
 const services={
-	storage: service_require("server/serverStorage/serverStorage"),
-	projects: service_require("server/projects/projects"),
 	account: service_require("server/account/account.new"),
-	spotify: service_require("server/currently-playing/spotify"),
 	minecraftServer: service_require("web/minecraftServerInfo/minecraftServerInfo"),
+	musikPlayer: service_require("server/currently-playing/musikPlayer"),
+	projects: service_require("server/projects/projects"),
+	spotify: service_require("server/currently-playing/spotify"),
+	storage: service_require("server/serverStorage/serverStorage"),
 };
 const {
 	randomIndex,
 	jsonStringify,
 	importHead,
 	overflowRemove,
-}=globals.functions;
+}=globals.functions;;
+const hostname=require("os").hostname();
+const isDev=hostname!=="lff-raspberrypi";
 const {allowed,data}=services.account.authUserByInput(input);
 ?><!DOCTYPE html>
 <!--IndexHtml update at 23.12.2022 at 23:32-->
@@ -26,6 +29,7 @@ const {allowed,data}=services.account.authUserByInput(input);
 				"/web/indexHtml/style.css",
 			],
 			script:[],
+			botIndex: !isDev,
 		})?>
 		<link rel=canonical href=https://lff.one>
 		<meta name=author content="Lando Fernandez-Falk">
@@ -33,7 +37,6 @@ const {allowed,data}=services.account.authUserByInput(input);
 		<meta name=keywords content="HTML, JavaScript, Programm, LFF5644, LFF, Tostedt, Hamburg, Lando, 5644, Lando5644, Lando Fernandez-Falk, lando.fernandez-falk, Lando Fernandez Falk">
 		<meta property=og:type content=website>
 		<meta property=og:url content=https://lff.one>
-		<meta name=robots content=index>
 	</head>
 	<body>
 		<h1>
@@ -85,7 +88,7 @@ const {allowed,data}=services.account.authUserByInput(input);
 			if(!playing){break spotify;}
 			spotifyInfo=`
 				<p>
-					<span class="underLineHOVER cursorPOINTER" onclick="location.href='/currently-playing'" title="Was Ich jz grade auf Spotify höre!">Spotify</span>
+					<span class="underLineHOVER cursorPOINTER" onclick="location.href='/currently-playing#spotify'" title="Was Ich jz grade auf Spotify höre!">Spotify</span>
 					: 
 					${imgs.length>0?`<img class=cursorPOINTER alt=songIcon src="${imgs[2].url}" onclick="location.href='${imgs[1].url}'" height=20 align=top> `:""}
 					${mp3?`
@@ -95,7 +98,21 @@ const {allowed,data}=services.account.authUserByInput(input);
 					<a ${url?`onclick="return confirm('ACHTUNG! Weiterleitung auf Spotify!\\n\\n${url}\\n\\nVoller Songname: '+this.title);" href="${url}"`:`onclick="alert('Song ohne link!\\n\\nVoller Songname: '+this.title)"`} title="${name}">${overflowRemove(name,20)}</a>
 				</p>
 			`.split("\t").join("").split("\n").join("")+"\n";
-		}?><?=spotifyInfo?><p class=hidden id=battery></p>
+		}?><?=spotifyInfo?><?let musikPlayerInfo=""; {
+			const currentlyPlaying=services.musikPlayer.currentlyPlaying;
+			if(currentlyPlaying&&currentlyPlaying.isPlaying){
+				musikPlayerInfo=`
+					<p>
+						<span class="underLineHOVER cursorPOINTER" title="Wiedergabe ${isDev?'auf':'im'} ${isDev?hostname:'Radio'}" onclick="location.href='/currently-playing#musikPlayer'">MusikPlayer</span>
+						: 
+						<${currentlyPlaying.track.album?`a title="Album: ${currentlyPlaying.track.album}${currentlyPlaying.track.discNumber?`&#10;CD: ${currentlyPlaying.track.discNumber}`:""}&#10;Track: ${currentlyPlaying.track.name}${currentlyPlaying.track.trackNumber?`&#10;Title Nummer: ${currentlyPlaying.track.trackNumber}`:""}" href="https://google.com/search?q=${escape(currentlyPlaying.track.album+": "+currentlyPlaying.track.name)}"`:`span title="Track: ${currentlyPlaying.track.name}`}>
+							<span>${overflowRemove(currentlyPlaying.track.name,20)}</span>
+						</${currentlyPlaying.track.album?"a":"span"}>
+					</p>
+				`.split("\n").join("").split("\t").join("");
+			}
+		}?><?=musikPlayerInfo?>
+		<p class=hidden id=battery></p>
 		<?spotifyInfo:{
 			let html="";
 			if(
