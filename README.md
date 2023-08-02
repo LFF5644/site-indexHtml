@@ -6,5 +6,5 @@ you can see the dev stand on [DEV.LFF.ONE](https://dev.lff.one) this are only wo
 # TODOs
 - [x] currently playing in spotify
 - [x] currently playing in spotify (own web page)
-- [ ] add minecraft server status
-- [ ] list who many players online
+- [x] add minecraft server status
+- [x] list who many players online
