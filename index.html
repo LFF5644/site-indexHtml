@@ -41,7 +41,7 @@ const {allowed,data}=services.account.authUserByInput(input);
 	<body>
 		<h1>
 			Landos Webseite 
-			<span class=green title=Copyright>©</span>
+			<span class=green title=Copyright>&copy;</span>
 			<span class=red title="Hier wird immer das jzige Jahr drin stehen!"><?=new Date().getFullYear()?></span>
 		</h1>
 		<p>
@@ -154,10 +154,10 @@ const {allowed,data}=services.account.authUserByInput(input);
 		}?>
 		<h2>Links</h2>
 		<p><li><a href=/web/serverInfo/serverInfo.html>Server-Auslastung /-Infomationen</a></li></p>
-		<p><li><a href=/ls>Datei-Explorer</a></li></p>
+		<p><li><a href=/ls onclick="return confirm('Warnung: Datei-Explorer ist derzeit \'Verbuggt\' und daher Abgeschaltet!\n\nTrozdem Öffnen?');">Datei-Explorer</a></li></p>
 		<p><li><a href=/home>Meine Browser-Homepage</a></li></p>
-		<p><li><a href="/ls#/z">Andere Sachen</a></li></p>
-		<p><li><a href="//dev.lff.one">Developer/Programmierer/Entwickler Stand</a></li></p>
+		<p><li><a href=/ls#/z onclick="return confirm('Warnung: Datei-Explorer ist derzeit \'Verbuggt\' und daher Abgeschaltet!\n\nTrozdem Öffnen?');">Andere Sachen</a></li></p>
+		<p><li><a href=//dev.lff.one onclick="return confirm('Warnung: Entwicklungsserver Offline! Entwicklungsstand ist in echtzeit auf der Hauptwebseite!\n\nTrozdem Öffnen?');">Developer/Programmierer/Entwickler Stand</a></li></p>
 
 		<h2>Projekte</h2><?
 			const projects=services.projects.getProjects();
@@ -210,6 +210,12 @@ const {allowed,data}=services.account.authUserByInput(input);
 					<p><button form=form_settings>Übernehmen</button> <button form="" onclick="location.href='/';">Reset</button></p>
 				</form>
 			</fieldset>
+			<?
+				if(allowed&&data.account.username==="l3p3"){
+					console.log(data.account);
+					?><h1>Werbung</h1><p><a href="http://l3p3.de">L3P3.de</a></p><?
+				}
+			?>
 		</div>
 
 		<script src=/web/indexHtml/app.js></script>
