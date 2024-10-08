@@ -154,11 +154,11 @@ const {allowed,data}=services.account.authUserByInput(input);
 			?><?="\n\t\t"+html+"\n"?><?
 		}?>
 		<h2>Links</h2>
-		<p><li><a href=/web/serverInfo/serverInfo.html>Server-Auslastung /-Infomationen</a></li></p>
+		<p><li><a href=/serverInfo>Server-Auslastung /-Infomationen</a></li></p>
 		<p><li><a href=/ls onclick="return confirm('Warnung: Datei-Explorer ist derzeit \'Verbuggt\' und daher Abgeschaltet!\n\nTrozdem Öffnen?');">Datei-Explorer</a></li></p>
 		<p><li><a href=/home>Meine Browser-Homepage</a></li></p>
-		<p><li><a href=/ls#/z onclick="return confirm('Warnung: Datei-Explorer ist derzeit \'Verbuggt\' und daher Abgeschaltet!\n\nTrozdem Öffnen?');">Andere Sachen</a></li></p>
-		<p><li><a href=//dev.lff.one onclick="return confirm('Warnung: Entwicklungsserver Offline! Entwicklungsstand ist in echtzeit auf der Hauptwebseite!\n\nTrozdem Öffnen?');">Developer/Programmierer/Entwickler Stand</a></li></p>
+		<p><li><a href=/ls#/z onclick="return confirm('Warnung: Datei-Explorer ist derzeit \'Verbuggt\' und daher Abgeschaltet!\n\nTrozdem Öffnen?');">Andere-Sachen</a></li></p>
+		<p><li><a href=//dev.lff.one onclick="return confirm('Warnung: Entwicklungsserver Offline! Entwicklungsstand ist in echtzeit auf der Hauptwebseite!\n\nTrozdem Öffnen?');">Developer/Programmierer/Entwickler-Stand</a></li></p>
 
 		<h2>Projekte</h2><?
 			const projects=services.projects.getProjects();
@@ -168,7 +168,7 @@ const {allowed,data}=services.account.authUserByInput(input);
 			<tr>
 				<th>Projekt</th>
 				<th class="ProjectVersion<?=whatShow==='ProjectVersion'||whatShow==='all'||!whatShow?'':' hidden'?>">Version</th>
-				<th class="ProjectVersionTag<?=whatShow==='ProjectVersionTag'||whatShow==='all'?'':' hidden'?>">Versions Tag</th>
+				<th class="ProjectVersionTag<?=whatShow==='ProjectVersionTag'||whatShow==='all'?'':' hidden'?>">Versions-Tag</th>
 				<th class="ProjectGitRepo<?=whatShow==='ProjectGitRepo'||whatShow==='all'?'':' hidden'?>">GitHub</th>
 			</tr>
 <?
@@ -204,7 +204,7 @@ const {allowed,data}=services.account.authUserByInput(input);
 				<form id=form_settings method=post>
 					<p><label><input<?=whatShow==='ProjectVersion'||!whatShow?' checked':''?> type=radio value=ProjectVersion name=projects_show> Versionen anzeigen</label></p>
 					<p><label><input<?=whatShow==='ProjectVersionTag'?' checked':''?> type=radio value=ProjectVersionTag name=projects_show> Versions-Tag anzeigen</label></p>
-					<p><label><input<?=whatShow==='ProjectGitRepo'?' checked':''?> type=radio value=ProjectGitRepo name=projects_show> GitHub Links anzeigen</label></p>
+					<p><label><input<?=whatShow==='ProjectGitRepo'?' checked':''?> type=radio value=ProjectGitRepo name=projects_show> GitHub-Links anzeigen</label></p>
 					<p><label><input<?=whatShow==='0'?' checked':''?> type=radio value=0 name=projects_show> Nur Projekte anzeigen</label></p>
 					<p><label><input<?=whatShow==='all'?' checked':''?> type=radio value=all name=projects_show> Alle anzeigen</label></p>
 					<p><label><input<?=input.tableBorder==='0'||!input.tableBorder?'':' checked'?> type=checkbox value=1 name=tableBorder> Rahmen anzeigen</label></p>
@@ -214,7 +214,7 @@ const {allowed,data}=services.account.authUserByInput(input);
 			<?
 				if(allowed&&data.account.username==="l3p3"){
 					console.log(data.account);
-					?><h1>Werbung</h1><p><a href="http://l3p3.de">L3P3.de</a></p><?
+					?><h1>Werbung</h1><p><a href=//l3p3.de>L3P3.de</a></p><?
 				}
 			?>
 		</div>
