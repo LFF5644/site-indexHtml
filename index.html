@@ -159,9 +159,15 @@ const {allowed,data}=services.account.authUserByInput(input);
 			?><?="\n\t\t"+html+"\n"?><?
 		}?>
 		<?
+		const ipv4Regex = /^((25[0-5]|2[0-4][0-9]|1?[0-9]{1,2})\.){3}(25[0-5]|2[0-4][0-9]|1?[0-9]{1,2})$/;
+		const allowedHostnames=[
+			"lff-servern95.fritz.box",
+			"lff.l3p3.de",
+			"lff5644.ddns.net",
+		];
 		if(
 			input.from&&
-			input.from.length<20&&
+			input.from.length<25&&
 			input.from.toLowerCase()!=="lff.one"&&
 			!input.from.includes("<")&&
 			!input.from.includes("'")&&
@@ -170,7 +176,11 @@ const {allowed,data}=services.account.authUserByInput(input);
 			!input.from.includes(' ')&&
 			!input.from.includes('%')&&
 			input.from===escape(input.from)&&
-			input.from===unescape(input.from)
+			input.from===unescape(input.from)&&
+			(
+				allowedHostnames.includes(input.from.toLowerCase())||
+				ipv4Regex.test(input.from)
+			)
 		){
 			?>
 		<div class=warn>
