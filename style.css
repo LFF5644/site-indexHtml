@@ -16,3 +16,14 @@ button{cursor: pointer;}
 table[border="0"] td{
 	padding: 10px 10px;
 }
+div.warn{
+	border-width: 5px 5px 5px 5px;
+	border-color: red;
+	border-radius: 10px;
+	width: fit-content;
+	padding: 5px;
+	padding-top: 1px;
+	margin: 2px;
+	border: 10px red solid;
+	text-align: center;
+}

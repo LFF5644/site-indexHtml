@@ -13,28 +13,33 @@ const {
 	importHead,
 	overflowRemove,
 }=globals.functions;;
-const hostname=require("os").hostname();
-const isDev=hostname!=="lff-raspberrypi";
+//const hostname=require("os").hostname();
+const isDev=false; //hostname!=="lff-raspberrypi";
 const {allowed,data}=services.account.authUserByInput(input);
 ?><!DOCTYPE html>
 <!--IndexHtml update at 23.12.2022 at 23:32-->
-<html>
+<html lang=de>
 	<head>
 		<?=importHead({
 			input,
 			title:"Landos Webseite!",
+			description: "Lando Fernandez-Falk seine Webseite!",
+			keywords: [
+				"HTML", "JavaScript", "Programm", "LFF5644", "LFF",
+				"Tostedt", "Hamburg", "Lando", "5644", "Lando5644",
+				"Lando Fernandez-Falk", "lando.fernandez-falk",
+				"Lando Fernandez Falk", "lff", "lff5644",
+			],
 			css:[
 				"/css/main.css",
 				"/css/dynamic.css?imports=red,green,underLineHOVER,cursorPOINTER",
 				"/web/indexHtml/style.css",
 			],
 			script:[],
-			botIndex: !isDev,
+			botIndexAllow: !isDev,
 		})?>
 		<link rel=canonical href=https://lff.one>
-		<meta name=author content="Lando Fernandez-Falk">
-		<meta name=description content="Lando Fernandez-Falk seine Webseite!">
-		<meta name=keywords content="HTML, JavaScript, Programm, LFF5644, LFF, Tostedt, Hamburg, Lando, 5644, Lando5644, Lando Fernandez-Falk, lando.fernandez-falk, Lando Fernandez Falk">
+		<meta name=author content="Lando Fernandez-Falk (LFF5644)">
 		<meta property=og:type content=website>
 		<meta property=og:url content=https://lff.one>
 		<meta property=og:site_name content="Landos Website">
@@ -153,8 +158,32 @@ const {allowed,data}=services.account.authUserByInput(input);
 				.split("\n").join("")
 			?><?="\n\t\t"+html+"\n"?><?
 		}?>
+		<?
+		if(
+			input.from&&
+			input.from.length<20&&
+			input.from.toLowerCase()!=="lff.one"&&
+			!input.from.includes("<")&&
+			!input.from.includes("'")&&
+			!input.from.includes('"')&&
+			!input.from.toLowerCase().includes('script')&&
+			!input.from.includes(' ')&&
+			!input.from.includes('%')&&
+			input.from===escape(input.from)&&
+			input.from===unescape(input.from)
+		){
+			?>
+		<div class=warn>
+			<h3>Webseite Wurde nach <a href="/">LFF.one</a> verschoben!</h3>
+			<p>Ist jetzt <b>nicht</b> mehr unter <b style="text-transform: uppercase;"><?=input.from?></b> erreichbar</p>
+			<p><button onclick="location.href='/'">Verstanden und auf LFF.one Weiterleiten</button></p>
+		</div>
+			<?
+		}
+		?>
 		<h2>Links</h2>
 		<p><li><a href=/serverInfo>Server-Auslastung /-Infomationen</a></li></p>
+		<p><li><a href=/school-class>Hausaufgaben, Klausuren, Infos und Stundenplan</a></li></p>
 		<p><li><a href=/ls onclick="return confirm('Warnung: Datei-Explorer ist derzeit \'Verbuggt\' und daher Abgeschaltet!\n\nTrozdem Öffnen?');">Datei-Explorer</a></li></p>
 		<p><li><a href=/home>Meine Browser-Homepage</a></li></p>
 		<p><li><a href=/ls#/z onclick="return confirm('Warnung: Datei-Explorer ist derzeit \'Verbuggt\' und daher Abgeschaltet!\n\nTrozdem Öffnen?');">Andere-Sachen</a></li></p>
