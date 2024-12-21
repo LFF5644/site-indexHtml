@@ -250,13 +250,14 @@ const {allowed,data}=services.account.authUserByInput(input);
 					<p><button form=form_settings>Übernehmen</button> <button form="" onclick="location.href='/';">Reset</button></p>
 				</form>
 			</fieldset>
-			<?
-				if(allowed&&data.account.username==="l3p3"){
-					console.log(data.account);
-					?><h1>Werbung</h1><p><a href=//l3p3.de>L3P3.de</a></p><?
-				}
-			?>
 		</div>
+
+		<h2>Werbung</h2>
+		<p><a href=//l3p3.de>L3P3.de</a> - Buddy, kein Fettsack</p>
+
+		<footer style="opacity: 0.5;">
+			<a href=//lff.one>LFF.one</a> &copy; <?=new Date().getFullYear()?>
+		</footer>
 
 		<script src=/web/indexHtml/app.js></script>
 	</body>
