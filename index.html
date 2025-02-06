@@ -6,6 +6,7 @@ const services={
 	projects: service_require("server/projects/projects"),
 	spotify: service_require("server/currently-playing/spotify"),
 	storage: service_require("server/serverStorage/serverStorage"),
+	controller: service_require_try("server/controller/controller"),
 };
 const {
 	randomIndex,
@@ -80,7 +81,14 @@ const {allowed,data}=services.account.authUserByInput(input);
 			<a href=/account><?=allowed?data.account.nickname:"Nicht Angemeldet!"?></a>
 			<i style="font-size: 90%;"><?=allowed?"Für infos klicken":"Zum Anmelden / Registrieren klicken"?></i>
 		</p>
-		<?let spotifyInfo="";spotify:{
+		<?
+		if(services.controller&&services.controller.state.callState==="Aktueller Anruf"){
+			const permission=allowed?services.account.hasAccountRankAttr({
+				rankAttr: "controller-view-callState",
+				username: data.account.username,
+			}):false;
+			?><p title="aktualisiert vor <?=Math.round((Date.now()-services.controller.state.lastUpdate)/1000/60)?> Minuten">📞 Telefoniert seit <?=Math.round((Date.now()-services.controller.state.callTime)/1000/60)?> Minuten<?=permission?" mit <i>"+services.controller.state.callNumber+"</i>":""?></p><?
+		}?><?let spotifyInfo="";spotify:{
 			if(!services.spotify.infos){break spotify;}
 			const {
 				playing,
