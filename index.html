@@ -1,7 +1,7 @@
 <?
 const services={
 	account: service_require("server/account/account.new"),
-	minecraftServer: service_require("web/minecraftServerInfo/minecraftServerInfo"),
+	minecraftServer: service_require_try("web/minecraftServerInfo/minecraftServerInfo"),
 	musikPlayer: service_require("server/currently-playing/musikPlayer"),
 	projects: service_require("server/projects/projects"),
 	spotify: service_require("server/currently-playing/spotify"),
@@ -112,7 +112,8 @@ const {allowed,data}=services.account.authUserByInput(input);
 					<a ${url?`onclick="return confirm('ACHTUNG! Weiterleitung auf Spotify!\\n\\n${url}\\n\\nVoller Songname: '+this.title);" href="${url}"`:`onclick="alert('Song ohne link!\\n\\nVoller Songname: '+this.title)"`} title="${name}">${overflowRemove(name,20)}</a>
 				</p>
 			`.split("\t").join("").split("\n").join("")+"\n";
-		}?><?=spotifyInfo?><?let musikPlayerInfo=""; {
+		}?><?=spotifyInfo?><?let musikPlayerInfo=""; musikPlayer:{
+			if(!services.musikPlayer) break musikPlayer;
 			const currentlyPlaying=services.musikPlayer.currentlyPlaying;
 			if(currentlyPlaying&&currentlyPlaying.isPlaying){
 				musikPlayerInfo=`
@@ -127,19 +128,20 @@ const {allowed,data}=services.account.authUserByInput(input);
 			}
 		}?><?=musikPlayerInfo?>
 		<p class=hidden id=battery></p>
-		<?spotifyInfo:{
+		<?minecraftInfo:{
+			if(!services.minecraftServer) break minecraftInfo;
 			let html="";
 			if(
 				!services.minecraftServer.serviceRunning||
-				services.minecraftServer.status
+				services.minecraftServer.statusToArray()
 					.filter(item=>
 						item.socketOnline&&
 						item.running&&
 						item.players.length>0
 					)
 					.length===0
-			) break spotifyInfo;
-			const servers=services.minecraftServer.status
+			) break minecraftInfo;
+			const servers=services.minecraftServer.statusToArray()
 				.filter(item=>
 					item.socketOnline&&
 					item.running&&
@@ -150,6 +152,10 @@ const {allowed,data}=services.account.authUserByInput(input);
 				.map(item=>item.players.length)
 				.filter(item=>item!==0)
 				.reduce((x,y)=>x+y)
+			const players=servers
+				.filter(item=>item.players.length>0)
+				.map(item=>item.players)
+				.flat()
 			html=(`
 				<p>
 				<span 
@@ -159,7 +165,7 @@ const {allowed,data}=services.account.authUserByInput(input);
 					>
 						Minecraft-Server
 				</span>
-				: <b>${onlinePlayers}</b> Spieler ${onlinePlayers===1?"ist":"sind"} Aktiv
+				: <span title="Spieler: ${players.join('; ')}"><b style=color:green>${onlinePlayers}</b> Spieler ${onlinePlayers===1?"ist":"sind"} Aktiv</span>
 				</p>
 			`)
 				.split("\t").join("")
