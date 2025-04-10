@@ -19,33 +19,35 @@ const isDev=false; //hostname!=="lff-raspberrypi";
 const {allowed,data}=services.account.authUserByInput(input);
 ?><!DOCTYPE html>
 <!--IndexHtml update at 23.12.2022 at 23:32-->
+<!--Style Insprerated by my friend L3P3 ;)-->
 <html lang=de>
 	<head>
 		<?=importHead({
 			input,
-			title:"Landos Webseite!",
-			description: "Lando Fernandez-Falk seine Webseite!",
+			title:"Lando Fernandez-Falk's Website (LFF5644)",
+			description: "Lando's Website, Lustiger Programmierer der gern angibt und in seinem Blog vieles erzählt.",
 			keywords: [
 				"HTML", "JavaScript", "Programm", "LFF5644", "LFF",
 				"Tostedt", "Hamburg", "Lando", "5644", "Lando5644",
 				"Lando Fernandez-Falk", "lando.fernandez-falk",
-				"Lando Fernandez Falk", "lff", "lff5644",
+				"Lando Fernandez Falk", "lff", "lff5644", "Blog",
 			],
 			css:[
 				"/css/main.css",
-				"/css/dynamic.css?imports=red,green,underLineHOVER,cursorPOINTER",
+				"/css/dynamic.css?imports=red,green,underLineHOVER,cursorPOINTER,hidden",
 				"/web/indexHtml/style.css",
 			],
 			script:[],
 			botIndexAllow: !isDev,
 		})?>
 		<link rel=canonical href=https://lff.one>
-		<meta name=author content="Lando Fernandez-Falk (LFF5644)">
+		<meta name=author content=LFF5644>
 		<meta property=og:type content=website>
 		<meta property=og:url content=https://lff.one>
 		<meta property=og:site_name content="Landos Website">
 	</head>
 	<body>
+		<p style=display:none>Willkommen auf LFF.one ich Programmiere als Hobby und schreibe in meinem Blog lustige erlebnise auf. Wenn ich's nicht vergessen habe.</p>
 		<h1>
 			Landos Webseite 
 			<span class=green title=Copyright>&copy;</span>
@@ -206,9 +208,10 @@ const {allowed,data}=services.account.authUserByInput(input);
 		}
 		?>
 		<h2>Links</h2>
+		<p><li><a href=/blog>Blog-Artikel</a></li></p>
 		<p><li><a href=/serverInfo>Server-Auslastung /-Infomationen</a></li></p>
 		<p><li><a href=/school-class>Hausaufgaben, Klausuren, Infos und Stundenplan</a></li></p>
-		<p><li><a href=/ls onclick="return confirm('Warnung: Datei-Explorer ist derzeit \'Verbuggt\' und daher Abgeschaltet!\n\nTrozdem Öffnen?');">Datei-Explorer</a></li></p>
+		<p><li><a href=/ls>Datei-Explorer</a></li></p>
 		<p><li><a href=/home>Meine Browser-Homepage</a></li></p>
 		<p><li><a href=/ls#/z onclick="return confirm('Warnung: Datei-Explorer ist derzeit \'Verbuggt\' und daher Abgeschaltet!\n\nTrozdem Öffnen?');">Andere-Sachen</a></li></p>
 		<p><li><a href=//dev.lff.one onclick="return confirm('Warnung: Entwicklungsserver Offline! Entwicklungsstand ist in echtzeit auf der Hauptwebseite!\n\nTrozdem Öffnen?');">Developer/Programmierer/Entwickler-Stand</a></li></p>
@@ -266,8 +269,8 @@ const {allowed,data}=services.account.authUserByInput(input);
 			</fieldset>
 		</div>
 
-		<h2>Werbung</h2>
-		<p><a href=//l3p3.de>L3P3.de</a> - Buddy, kein Fettsack</p>
+		<h2><?=allowed&&data.account.username==="l3p3"?"Links zu Freunden":"Werbung"?></h2>
+		<p><a href=//l3p3.de>L3P3.de</a> - <?=allowed&&data.account.username==="l3p3"?"Freund 🙂✅":"Buddy, kein Fettsack"?></p>
 
 		<footer style="opacity: 0.5;">
 			<a href=//lff.one>LFF.one</a> &copy; <?=new Date().getFullYear()?>
