@@ -2,7 +2,7 @@
 const services={
 	account: service_require("server/account/account.new"),
 	minecraftServer: service_require_try("web/minecraftServerInfo/minecraftServerInfo"),
-	musikPlayer: service_require("server/currently-playing/musikPlayer"),
+	musikPlayer: service_require_try("server/currently-playing/musikPlayer"),
 	projects: service_require("server/projects/projects"),
 	spotify: service_require("server/currently-playing/spotify"),
 	storage: service_require("server/serverStorage/serverStorage"),
@@ -10,10 +10,9 @@ const services={
 };
 const {
 	randomIndex,
-	jsonStringify,
 	importHead,
 	overflowRemove,
-}=globals.functions;;
+}=globals.functions;
 //const hostname=require("os").hostname();
 const isDev=false; //hostname!=="lff-raspberrypi";
 const {allowed,data}=services.account.authUserByInput(input);
@@ -47,7 +46,7 @@ const {allowed,data}=services.account.authUserByInput(input);
 		<meta property=og:site_name content="Landos Website">
 	</head>
 	<body>
-		<p style=display:none>Willkommen auf LFF.one ich Programmiere als Hobby und schreibe in meinem Blog lustige erlebnise auf. Wenn ich's nicht vergessen habe.</p>
+		<p style=display:none>Willkommen auf LFF.one ich Programmiere als Hobby und schreibe in meinem Blog lustige Erlebnisse auf. Wenn ich's nicht vergessen habe.</p>
 		<h1>
 			Landos Webseite 
 			<span class=green title=Copyright>&copy;</span>
@@ -55,7 +54,7 @@ const {allowed,data}=services.account.authUserByInput(input);
 		</h1>
 		<p>
 			<span class=green>Bot</span>: <?
-				let msg="<span title=\"zu der zeit fält mir nichts ein!\">Hallo!</span>"
+				let msg="<span title=\"zu der zeit fällt mir nichts ein!\">Hallo!</span>"
 				const date=new Date();
 				const hour=date.getHours();
 				const hours=services.storage.readStorage("botMsgs_hours");
@@ -91,7 +90,8 @@ const {allowed,data}=services.account.authUserByInput(input);
 			}):false;
 			?><p title="aktualisiert vor <?=Math.round((Date.now()-services.controller.state.lastUpdate)/1000/60)?> Minuten">📞 Telefoniert seit <?=Math.round((Date.now()-services.controller.state.callTime)/1000/60)?> Minuten<?=permission?" mit <i>"+services.controller.state.callNumber+"</i>":""?></p><?
 		}?><?let spotifyInfo="";spotify:{
-			if(!services.spotify.infos){break spotify;}
+			if(!services.spotify) break spotify;
+			if(!services.spotify.infos) break spotify;
 			const {
 				playing,
 				track:{
@@ -208,8 +208,8 @@ const {allowed,data}=services.account.authUserByInput(input);
 		}
 		?>
 		<h2>Links</h2>
-		<p><li><a href=/blog>Blog-Artikel</a></li></p>
-		<p><li><a href=/serverInfo>Server-Auslastung /-Infomationen</a></li></p>
+		<p><li><a href=/blog>Berüchtigte LFF-Blog</a></li></p>
+		<p><li><a href=/serverInfo>Server-Auslastung /-Infos</a></li></p>
 		<p><li><a href=/school-class>Hausaufgaben, Klausuren, Infos und Stundenplan</a></li></p>
 		<p><li><a href=/ls>Datei-Explorer</a></li></p>
 		<p><li><a href=/home>Meine Browser-Homepage</a></li></p>
