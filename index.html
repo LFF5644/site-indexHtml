@@ -1,12 +1,12 @@
 <?
 const services={
-	account: service_require("server/account/account.new"),
-	minecraftServer: service_require_try("web/minecraftServerInfo/minecraftServerInfo"),
-	musikPlayer: service_require_try("server/currently-playing/musikPlayer"),
-	projects: service_require("server/projects/projects"),
-	spotify: service_require("server/currently-playing/spotify"),
-	storage: service_require("server/serverStorage/serverStorage"),
-	controller: service_require_try("server/controller/controller"),
+	account: 			service_require_try("server/account/account.new"),
+	controller: 		service_require_try("server/controller/controller"),
+	minecraftServer: 	service_require_try("web/minecraftServerInfo/minecraftServerInfo"),
+	musikPlayer: 		service_require_try("server/currently-playing/musikPlayer"),
+	projects: 			service_require("server/projects/projects"),
+	spotify: 			service_require_try("server/currently-playing/spotify"),
+	storage: 			service_require("server/serverStorage/serverStorage"),
 };
 const {
 	randomIndex,
@@ -15,7 +15,7 @@ const {
 }=globals.functions;
 //const hostname=require("os").hostname();
 const isDev=false; //hostname!=="lff-raspberrypi";
-const {allowed,data}=services.account.authUserByInput(input);
+const {allowed,data}=services.account&&services.account.authUserByInput(input)||{allowed:null,data:null};
 ?><!DOCTYPE html>
 <!--IndexHtml update at 23.12.2022 at 23:32-->
 <!--Style Insprerated by my friend L3P3 ;)-->
@@ -52,6 +52,23 @@ const {allowed,data}=services.account.authUserByInput(input);
 			<span class=green title=Copyright>&copy;</span>
 			<span class=red title="Hier wird immer das jzige Jahr drin stehen!"><?=new Date().getFullYear()?></span>
 		</h1>
+<?
+if(input.greet){
+	let greet="";
+	let text="Wollte auf meine Webseite LOL!"
+	switch(input.greet.toLowerCase()){
+		case "l3p3":
+		case "lpp": greet="Len Peschko"; text="Freund von mir!"; break;
+		case "lfh": greet="Lennart Hoeft"; text="Längster Freund, soweit ich weiß wird er gern Fritzchen genant xD"; break;
+		case "ma": greet="Maged Altorke"; text="Netter Kollege!"; break;
+		case "tecw": greet="Theo Westermann"; text="War mal Praktikant! "+text; break;
+	}
+	if(greet){
+?>		<p>Grüße: <span style=color:red;cursor:pointer; onclick="alert('<?=text?>')"><?=greet?></span> war hier!</p>
+<?
+	}
+}
+?>
 		<p>
 			<span class=green>Bot</span>: <?
 				let msg="<span title=\"zu der zeit fällt mir nichts ein!\">Hallo!</span>"
@@ -89,17 +106,14 @@ const {allowed,data}=services.account.authUserByInput(input);
 				username: data.account.username,
 			}):false;
 			?><p title="aktualisiert vor <?=Math.round((Date.now()-services.controller.state.lastUpdate)/1000/60)?> Minuten">📞 Telefoniert seit <?=Math.round((Date.now()-services.controller.state.callTime)/1000/60)?> Minuten<?=permission?" mit <i>"+services.controller.state.callNumber+"</i>":""?></p><?
-		}?><?let spotifyInfo="";spotify:{
+		}?><?
+		let spotifyInfo="";
+		spotify:{
 			if(!services.spotify) break spotify;
 			if(!services.spotify.infos) break spotify;
 			const {
 				playing,
-				track:{
-					name,
-					imgs,
-					mp3,
-					url,
-				},
+				track: {name, imgs, mp3, url},
 			}=services.spotify.infos;
 			if(!playing){break spotify;}
 			spotifyInfo=`
@@ -271,11 +285,11 @@ const {allowed,data}=services.account.authUserByInput(input);
 
 		<h2><?=allowed&&data.account.username==="l3p3"?"Links zu Freunden":"Werbung"?></h2>
 		<p><a href=//l3p3.de>L3P3.de</a> - <?=allowed&&data.account.username==="l3p3"?"Freund 🙂✅":"Buddy, kein Fettsack"?></p>
+		<p><a href=http://rjpzone.one>RjpZone.one</a> - Freund der einen Webserver hat.</p>
 
 		<footer style="opacity: 0.5;">
 			<a href=//lff.one>LFF.one</a> &copy; <?=new Date().getFullYear()?>
 		</footer>
-
 		<script src=/web/indexHtml/app.js></script>
 	</body>
 </html>
