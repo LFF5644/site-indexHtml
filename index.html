@@ -1,6 +1,7 @@
 <?
 const services={
 	account: 			service_require_try("server/account/account.new"),
+	alexa:				service_require_try("web/alexa/alexa-remote-noai"),
 	controller: 		service_require_try("server/controller/controller"),
 	minecraftServer: 	service_require_try("web/minecraftServerInfo/minecraftServerInfo"),
 	musikPlayer: 		service_require_try("server/currently-playing/musikPlayer"),
@@ -68,83 +69,94 @@ if(input.greet){
 <?
 	}
 }
-?>
-		<p>
-			<span class=green>Bot</span>: <?
-				let msg="<span title=\"zu der zeit fällt mir nichts ein!\">Hallo!</span>"
-				const date=new Date();
-				const hour=date.getHours();
-				const hours=services.storage.readStorage("botMsgs_hours");
-
-				const msgObject=hours.find(item=>
-					(
-						item.from<=hour&&
-						item.to>=hour
-					)||
-					(
-						item.allowed?
-							item.allowed:
-							[]
-					)
-						.includes(hour)
-				);
-				if(msgObject){
-					const index=randomIndex(msgObject.msgs.length-1);
-					msg=msgObject.msgs[index];
-				}
-			?><?=msg?>
-		</p>
+?><?
+// BOT: HALLO ICH WÜHLE GRAD IM QUELLCODE LOL xD
+let msg="<span title=\"zu der zeit fällt mir nichts ein!\">Hallo!</span>"
+const date=new Date();
+const hour=date.getHours();
+const hours=services.storage.readStorage("botMsgs_hours");
+const msgObject=hours.find(item=>
+	(
+		item.from<=hour&&
+		item.to>=hour
+	)||
+	(
+		item.allowed?
+			item.allowed:
+			[]
+	)
+		.includes(hour)
+);
+if(msgObject){
+	const index=randomIndex(msgObject.msgs.length-1);
+	msg=msgObject.msgs[index];
+}
+?>		<p><span class=green>Bot</span>: <?=msg?></p>
 		<p>
 			<span class="underLineHOVER cursorPOINTER" onclick="location.href='/account'">Account</span>: 
 			<a href=/account><?=allowed?data.account.nickname:"Nicht Angemeldet!"?></a>
 			<i style="font-size: 90%;"><?=allowed?"Für infos klicken":"Zum Anmelden / Registrieren klicken"?></i>
 		</p>
-		<?
-		if(services.controller&&services.controller.state.callState==="Aktueller Anruf"){
-			const permission=allowed?services.account.hasAccountRankAttr({
-				rankAttr: "controller-view-callState",
-				username: data.account.username,
-			}):false;
-			?><p title="aktualisiert vor <?=Math.round((Date.now()-services.controller.state.lastUpdate)/1000/60)?> Minuten">📞 Telefoniert seit <?=Math.round((Date.now()-services.controller.state.callTime)/1000/60)?> Minuten<?=permission?" mit <i>"+services.controller.state.callNumber+"</i>":""?></p><?
-		}?><?
-		let spotifyInfo="";
-		spotify:{
-			if(!services.spotify) break spotify;
-			if(!services.spotify.infos) break spotify;
-			const {
-				playing,
-				track: {name, imgs, mp3, url},
-			}=services.spotify.infos;
-			if(!playing){break spotify;}
-			spotifyInfo=`
-				<p>
-					<span class="underLineHOVER cursorPOINTER" onclick="location.href='/currently-playing#spotify'" title="Was Ich jz grade auf Spotify höre!">Spotify</span>
-					: 
-					${imgs.length>0?`<img class=cursorPOINTER alt=songIcon src="${imgs[2].url}" onclick="location.href='${imgs[1].url}'" height=20 align=top> `:""}
-					${mp3?`
-						<audio id="audio_spotify" src="${mp3}" autobuffer></audio>
-						<img align=top height=20 class=cursorPOINTER src="/files/img/playBTN.png" onclick="spotify_audioToggle(this,document.getElementById('audio_spotify'))"> 
-					`:""}
-					<a ${url?`onclick="return confirm('ACHTUNG! Weiterleitung auf Spotify!\\n\\n${url}\\n\\nVoller Songname: '+this.title);" href="${url}"`:`onclick="alert('Song ohne link!\\n\\nVoller Songname: '+this.title)"`} title="${name}">${overflowRemove(name,20)}</a>
-				</p>
-			`.split("\t").join("").split("\n").join("")+"\n";
-		}?><?=spotifyInfo?><?let musikPlayerInfo=""; musikPlayer:{
-			if(!services.musikPlayer) break musikPlayer;
-			const currentlyPlaying=services.musikPlayer.currentlyPlaying;
-			if(currentlyPlaying&&currentlyPlaying.isPlaying){
-				musikPlayerInfo=`
-					<p>
+<?
+alexa:{if(services.alexa){ // Alexa -> Zimmertemperatur
+	const accountId="lff"; // select amazon account to search for TemperatureSensors
+	const entityDeviceName="LFF-Alexa"; // Device to get Temperature from
+	if(!services.alexa.hasAccountEntityBy(accountId,"displayName",entityDeviceName)) break alexa; // exits account?
+	if(!services.alexa.accounts[accountId].ready) {log("Alexa account: "+accountId+" is not ready yet!");break alexa} // account ready/online/connected
+	const entity=services.alexa.getAccountEntityBy(accountId,"displayName",entityDeviceName); // get device entity
+	const temperatureSensor=entity.data.get("TemperatureSensor"); // load temperature undefined if device dont support
+	if(!temperatureSensor) break alexa;
+	const temperature=temperatureSensor.temperature.value;
+	if(temperature>25) color="red";
+	else if(temperature< 20) color="blue";
+	else color="green";
+?>		<p title="Quelle: Alexa auf meinem Schrank xD (<?=entityDeviceName?>)">Zimmertemperatur: <span style=color:<?=color?>><?=temperature?>°C</span></p>
+<?
+}}
+		?><? // controller --> Service wo sich LFF-A3 Meldet und Status Updates Schickt über ein Widget auf meinem HomeScreen (lustiger hack xD)
+if(services.controller&&services.controller.state.callState==="Aktueller Anruf"){
+	const permission=allowed?services.account.hasAccountRankAttr({
+		rankAttr: "controller-view-callState",
+		username: data.account.username,
+	}):false;
+?>		<p title="aktualisiert vor <?=Math.round((Date.now()-services.controller.state.lastUpdate)/1000/60)?> Minuten">📞 Telefoniert seit <?=Math.round((Date.now()-services.controller.state.callTime)/1000/60)?> Minuten<?=permission?" mit <i>"+services.controller.state.callNumber+"</i>":""?></p>
+<?
+}
+?><? // Spotify currently-playing
+let spotifyInfo="";
+spotify:{
+	if(!services.spotify) break spotify;
+	if(!services.spotify.infos) break spotify;
+	const {
+		playing,
+		track: {name, imgs, mp3, url},
+	}=services.spotify.infos;
+	if(!playing){break spotify;}
+	spotifyInfo=`\
+			<p>
+				<span class="underLineHOVER cursorPOINTER" onclick="location.href='/currently-playing#spotify'" title="Was Ich jz grade auf Spotify höre!">Spotify</span>
+				: ${imgs.length>0?`<img class=cursorPOINTER alt=songIcon src="${imgs[2].url}" onclick="location.href='${imgs[1].url}'" height=20 align=top>`:""}
+${mp3?`
+					<audio id="audio_spotify" src="${mp3}" autobuffer></audio>
+					<img align=top height=20 class=cursorPOINTER src="/files/img/playBTN.png" onclick="spotify_audioToggle(this,document.getElementById('audio_spotify'))">
+`:""}				<a ${url?`onclick="return confirm('ACHTUNG! Weiterleitung auf Spotify!\\n\\n${url}\\n\\nVoller Songname: '+this.title);" href="${url}"`:`onclick="alert('Song ohne link!\\n\\nVoller Songname: '+this.title)"`} title="${name}">${overflowRemove(name,20)}</a>
+			</p>`; //.split("\t").join("").split("\n").join("")+"\n";
+}?><?=spotifyInfo?><?
+let musikPlayerInfo=""; musikPlayer:{ // MusikPlayer currently-playing
+	if(!services.musikPlayer) break musikPlayer;
+	const currentlyPlaying=services.musikPlayer.currentlyPlaying;
+	if(currentlyPlaying&&currentlyPlaying.isPlaying){
+		musikPlayerInfo=`					<p>
 						<span class="underLineHOVER cursorPOINTER" title="Wiedergabe ${isDev?'auf':'im'} ${isDev?hostname:'Radio'}" onclick="location.href='/currently-playing#musikPlayer'">MusikPlayer</span>
-						: 
-						<${currentlyPlaying.track.album?`a title="Album: ${currentlyPlaying.track.album}${currentlyPlaying.track.discNumber?`&#10;CD: ${currentlyPlaying.track.discNumber}`:""}&#10;Track: ${currentlyPlaying.track.name}${currentlyPlaying.track.trackNumber?`&#10;Title Nummer: ${currentlyPlaying.track.trackNumber}`:""}" href="https://google.com/search?q=${escape(currentlyPlaying.track.album+": "+currentlyPlaying.track.name)}"`:`span title="Track: ${currentlyPlaying.track.name}`}>
+						: <${currentlyPlaying.track.album?`a title="Album: ${currentlyPlaying.track.album}${currentlyPlaying.track.discNumber?`&#10;CD: ${currentlyPlaying.track.discNumber}`:""}&#10;Track: ${currentlyPlaying.track.name}${currentlyPlaying.track.trackNumber?`&#10;Title Nummer: ${currentlyPlaying.track.trackNumber}`:""}" href="https://google.com/search?q=${escape(currentlyPlaying.track.album+": "+currentlyPlaying.track.name)}"`:`span title="Track: ${currentlyPlaying.track.name}`}>
 							<span>${overflowRemove(currentlyPlaying.track.name,20)}</span>
 						</${currentlyPlaying.track.album?"a":"span"}>
 					</p>
-				`.split("\n").join("").split("\t").join("");
-			}
-		}?><?=musikPlayerInfo?>
-		<p class=hidden id=battery></p>
-		<?minecraftInfo:{
+`.split("\n").join("").split("\t").join("");
+	}
+}
+?><?=musikPlayerInfo?>		<p class=hidden id=battery></p>
+<?minecraftInfo:{
 			if(!services.minecraftServer) break minecraftInfo;
 			let html="";
 			if(
@@ -187,38 +199,36 @@ if(input.greet){
 				.split("\t").join("")
 				.split("\n").join("")
 			?><?="\n\t\t"+html+"\n"?><?
-		}?>
-		<?
-		const ipv4Regex = /^((25[0-5]|2[0-4][0-9]|1?[0-9]{1,2})\.){3}(25[0-5]|2[0-4][0-9]|1?[0-9]{1,2})$/;
-		const allowedHostnames=[
-			"lff-servern95.fritz.box",
-			"lff.l3p3.de",
-			"lff5644.ddns.net",
-		];
-		if(
-			input.from&&
-			input.from.length<25&&
-			input.from.toLowerCase()!=="lff.one"&&
-			!input.from.includes("<")&&
-			!input.from.includes("'")&&
-			!input.from.includes('"')&&
-			!input.from.toLowerCase().includes('script')&&
-			!input.from.includes(' ')&&
-			!input.from.includes('%')&&
-			input.from===escape(input.from)&&
-			input.from===unescape(input.from)&&
-			(
-				allowedHostnames.includes(input.from.toLowerCase())||
-				ipv4Regex.test(input.from)
-			)
-		){
-			?>
-		<div class=warn>
-			<h3>Webseite Wurde nach <a href="/">LFF.one</a> verschoben!</h3>
+		}?><? // Webseite wurde verschoben banner wenn ?from gesetzt
+const ipv4Regex = /^((25[0-5]|2[0-4][0-9]|1?[0-9]{1,2})\.){3}(25[0-5]|2[0-4][0-9]|1?[0-9]{1,2})$/;
+const allowedHostnames=[
+	"lff-servern95.fritz.box",
+	"lff.l3p3.de",
+	"lff5644.ddns.net",
+];
+if(
+	input.from&&
+	input.from.length<25&&
+	input.from.toLowerCase()!=="lff.one"&&
+	!input.from.includes("<")&&
+	!input.from.includes("'")&&
+	!input.from.includes('"')&&
+	!input.from.toLowerCase().includes('script')&&
+	!input.from.includes(' ')&&
+	!input.from.includes('%')&&
+	input.from===escape(input.from)&&
+	input.from===unescape(input.from)&&
+	(
+		allowedHostnames.includes(input.from.toLowerCase())||
+		ipv4Regex.test(input.from)
+	)
+){
+?>		<div class=warn>
+			<h3>Webseite wurde nach <a href="/">LFF.one</a> verschoben!</h3>
 			<p>Ist jetzt <b>nicht</b> mehr unter <b style="text-transform: uppercase;"><?=input.from?></b> erreichbar</p>
 			<p><button onclick="location.href='/'">Verstanden und auf LFF.one Weiterleiten</button></p>
 		</div>
-			<?
+<?
 		}
 		?>
 		<h2>Links</h2>
