@@ -71,3 +71,8 @@ if(navigator.getBattery){
 }else{
 	console.log("navigator.getBattery is undefined!");
 }
+
+// ACCOUNT FUNKTION WIEDER AKTIV NACH GEFÜHLT 2 JAHREN JZ ERST MAL DAMIT RUM NERVEN XDD
+window.interval_img=setInterval(()=>{
+	for(const item of [...document.getElementsByClassName("span_loginArrow")]) item.style.opacity=Math.sin(Date.now()/200)*.50 +.60;
+},80);
